@@ -1,0 +1,43 @@
+{
+  "name": "share2u",
+  "version": "1.0.0",
+  "description": "this is an webapp containing things share to yourself!",
+  "main": "logo.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ashuachao/Share2U.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ashuachao/Share2U/issues"
+  },
+  "homepage": "https://github.com/ashuachao/Share2U#readme",
+  "dependencies": {
+    "axios": "^0.15.3",
+    "koa": "^2.2.0",
+    "mongoose": "^4.9.1",
+    "vivus": "^0.4.0"
+  },
+  "devDependencies": {
+    "koa-webpack": "^0.3.1",
+    "nodemon": "^1.11.0",
+    "babel-cli": "^6.24.0",
+    "babel-core": "^6.24.0",
+    "babel-loader": "^6.4.1",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-polyfill": "^6.23.0",
+    "babel-preset-env": "^1.2.2",
+    "babel-preset-es2015": "^6.24.0",
+    "babel-preset-stage-0": "^6.22.0",
+    "babel-preset-stage-2": "^6.22.0",
+    "babel-register": "^6.24.0",
+    "babel-runtime": "^6.23.0"
+  },
+  "scripts": {
+    "dev": "webpack --config --progress",
+    "deploy": "NODE_ENV=production webpack --config --progress",
+    "test": "NODE_ENV=production webpack --config --progress",
+    "start": "nodemon ./app.js --exec babel-node --presets es2015,stage-2"
+  }
+}
