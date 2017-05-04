@@ -15,4 +15,12 @@
 // function drawLogo() {
 
 // }
-new Vivus('my-svg', {duration: 100}, function() {});
+window.addEventListener('popstate', function() {
+    console.log('state has change');
+})
+// new Vivus('my-svg', {duration: 100}, function() {});
+var button = document.querySelector('#btn');
+button.addEventListener('click', function() {
+    console.log('click')
+    history.pushState({}, null, 'aaa');
+})

@@ -1,14 +1,13 @@
-// import React,{Component} from 'react';
-// import ReactDOM from 'react-dom';
-import Rx from 'rxjs';
-// 请求数据流
+// import Rx from 'rxjs';
+// import axios from 'axios';
+// // 请求数据流
 // var requestStream = Rx.Observable.just('https://api.github.com/users');
 // // 只是返回一个promise
 // var responseMetastream = requestStream.map((requestUrl) => {
 //     return Rx.Observable.fromPromise($.getJSON(requestUrl));
 // })
 
-// flatmap主动emit
+// // flatmap主动emit
 // var responseStream = requestStream.flatMap((requestUrl) =>{
 //     return Rx.Observable.fromPromise($.getJSON(requestUrl));
 // })
@@ -49,23 +48,42 @@ import Rx from 'rxjs';
 //     }
 // });
 
-let todo = document.getElementById('todo');
-let addBtn = document.getElementById('addBtn');
-let weight = document.getElementById('weight');
-let height = document.getElementById('height');
-let weight$ = Rx.Observable.fromEvent(weight, 'keyup');
-let height$ = Rx.Observable.fromEvent(height, 'keyup');
-let btnClick$ = Rx.Observable.fromEvent(addBtn, 'click').mapTo('click');
-btnClick$.subscribe((input) => {
-    console.log(input);
-})
-let input$ = Rx.Observable.fromEvent(todo, 'keyup');
-input$.subscribe((input) => {
-    console.log(input.target.value);
-})
-// 合成最近的值
-Rx.Observable.combineLatest(weight$, height$, (w, h) => {
-    return w.target.value/h.target.value;
-}).subscribe((output) => {
-    console.log(output);
-})
+// let todo = document.getElementById('todo');
+// let addBtn = document.getElementById('addBtn');
+// let weight = document.getElementById('weight');
+// let height = document.getElementById('height');
+// let weight$ = Rx.Observable.fromEvent(weight, 'keyup');
+// let height$ = Rx.Observable.fromEvent(height, 'keyup');
+// let btnClick$ = Rx.Observable.fromEvent(addBtn, 'click').mapTo('click');
+// btnClick$.subscribe((input) => {
+//     console.log(input);
+// })
+// let input$ = Rx.Observable.fromEvent(todo, 'keyup');
+// input$.subscribe((input) => {
+//     console.log(input.target.value);
+// })
+// // 合成最近的值
+// Rx.Observable.combineLatest(weight$, height$, (w, h) => {
+//     return w.target.value/h.target.value;
+// }).subscribe((output) => {
+//     console.log(output);
+// })
+
+// const $getData = Rx.Observable.interval(1000).publishReplay(3).refCount()
+
+
+
+import React, {Component} from 'react';
+// jsx -> js对象 -> Dom元素,把reactDOM单独出来是因为有可能吧js对象渲染为DOM/APP
+import ReactDOM from 'react-dom';
+import CommentApp from './containers/CommentApp';
+import { createStore } from 'redux'
+import { Provider } from 'react-redux'
+import commentsReducer from './reducers/comment'
+const store = createStore(commentsReducer);
+ReactDOM.render(
+    <Provider store={store}>
+        <CommentApp/>
+    </Provider>, 
+    document.getElementById('root')
+)

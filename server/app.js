@@ -2,7 +2,7 @@ import fs from 'fs';
 // import middleware from 'koa-webpack'; 
 import Koa from 'koa';
 import mongoose from 'mongoose';
-import User from './server/db/Models/UserModel';
+import User from './db/Models/UserModel';
 
 const app = new Koa();
 mongoose.connect('mongodb://localhost/share2U', (err) => {
