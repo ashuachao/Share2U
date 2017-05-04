@@ -47,26 +47,32 @@ module.exports = {
     module: {
         rules: [{
             test: /\.(js|jsx)$/,
-            loader: 'babel-loader',
             // 不需要babel编译的范围
             exclude: /node_modules/,
-            // include: path.resolve(__dirname, 'src'), //打包的范围
-            query: {
-                presets: ['env', 'react']
+            use: {
+                loader: 'babel-loader',
+                options: {
+                    presets: ['env', 'react']
+                }
             }
+            // include: path.resolve(__dirname, 'src'), //打包的范围
         }, {
             test: /\.scss$/,
-            use: [
-                {
-                    loader: 'style-loader'
-                },
-                {
-                    loader: 'css-loader'
-                },
-                {
-                    loader: 'sass-loader'
-                }
-            ],
+            // 将css分离,不合并到js
+            use: ExtractTextPlugin.extract({
+                fallback: "style-loader",
+                // 开启css-module
+                use: [
+                    {
+                        loader: "css-loader?module=true"
+                    },
+                    {
+                        loader: 'postcss-loader'
+                    },
+                    {
+                        loader: "sass-loader"
+                    }],
+            }),
             exclude: /node_modules/
         }, {
             test: /\.css$/,
@@ -78,6 +84,7 @@ module.exports = {
                 
             })
         }, {
+            // 图片大小小于20kb会返回dataURL
             test: /\.(png|jpg|gif|svg|jpeg)$/i,
             loader: 'url-loader',
             query: {
@@ -119,7 +126,7 @@ module.exports = {
                 collapseWhitespace:true//删除空格
             }
         }),
-        new ExtractTextPlugin('style.css'),
+
         // 压缩css
         // new OptimizeCssAssetsPlugin({
         //     // 需要匹配的压缩的css
@@ -139,6 +146,8 @@ module.exports = {
         //     // // 压缩loaders    
         //     // minimize: true
         // }),
+
+        // 提取css代码
         new ExtractTextPlugin({
             filename: "style.[contenthash].css",
             disable: false,
