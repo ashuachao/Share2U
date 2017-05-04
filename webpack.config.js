@@ -17,13 +17,15 @@ const WebpackBrowserPlugin = require('webpack-browser-plugin');
 module.exports = {
     entry: {
         app: './src/app.js',
-        chunk: ['react', 'react-dom']
+        // chunk: ['react', 'react-dom', 'axios']
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: '[name]-[hash].bundle.js'
+        filename: '[name]-[hash].bundle.js',
         //生产的html存放资源的路径
         //publicPath:'/static/'
+        // 导出的chunk的名字,按需加载的导出文件名字
+        chunkFilename: '[name].chunk.js'
     },
     resolve: {
         // 引入模块的时候 import xxx 没有带后缀
@@ -104,6 +106,7 @@ module.exports = {
                 }
             }
         }),
+        // 自动化生成html插件
         new htmlWebpackPlugin({
             filename: 'index.html', //页面的生产名字
             template: 'index.html', //页面模板
@@ -118,13 +121,13 @@ module.exports = {
         }),
         new ExtractTextPlugin('style.css'),
         // 压缩css
-        new OptimizeCssAssetsPlugin({
-            // 需要匹配的压缩的css
-            // assetNameRegExp: /\.optimize\.css$/g,
-            cssProcessor: require('cssnano'),
-            cssProcessorOptions: { discardComments: {removeAll: true } },
-            canPrint: true
-        }),
+        // new OptimizeCssAssetsPlugin({
+        //     // 需要匹配的压缩的css
+        //     // assetNameRegExp: /\.optimize\.css$/g,
+        //     cssProcessor: require('cssnano'),
+        //     cssProcessorOptions: { discardComments: {removeAll: true } },
+        //     canPrint: true
+        // }),
         // 压缩代码插件
         // new UglifyJsPlugin({
         //     compress: {
@@ -145,12 +148,37 @@ module.exports = {
         new webpack.DefinePlugin({
             PRODUCTION: 'true'
         }),
-        // 提取公共模块
+        // 提取公共模块(第三方库)
         new webpack.optimize.CommonsChunkPlugin({
             // 将name对应entry的name,chunk代表的模块和入口模块的公共模块会被抽离出来放到chunk.js
             name: 'chunk',
             filename: 'chunk.js',
-            minChunks: Infinity,
-        })
+            // 自动分离chunk
+            // 不需要再entry里面定义chunk入口了
+            minChunks: ({ resource }) => (
+                resource &&
+                // resource代表加载模块的绝对路径
+                // 判断条件:模块来自node_modules目录 && 以.js结尾
+                resource.indexOf('node_modules') >= 0 &&
+                resource.match(/\.js$/)
+            ),
+        }),
+        // 将按需加载async的文件的公共的第三方引用库提取出来
+        new webpack.optimize.CommonsChunkPlugin({
+             // 所有的import()产生的chunk的公共模块提取出来
+            async: 'common-in-lazy',
+            minChunks: ({ resource } = {}) => (
+                resource &&
+                resource.includes('node_modules') &&
+                /axios/.test(resource)
+            ),
+        }),
+        // 将按需加载async的文件的公共代码提取出来
+        new webpack.optimize.CommonsChunkPlugin({
+            async: 'used-twice',
+            minChunks: (module, count) => (
+                count >= 2
+            ),
+        }),
     ]
 }
