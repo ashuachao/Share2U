@@ -16,7 +16,11 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const WebpackBrowserPlugin = require('webpack-browser-plugin');
 module.exports = {
     entry: {
-        app: './src/app.js',
+        app: [
+            // 热替换后reload
+            'webpack-hot-middleware/client?reload=true', 
+            './src/app.js'
+        ]
         // chunk: ['react', 'react-dom', 'axios']
     },
     output: {
@@ -30,7 +34,7 @@ module.exports = {
     resolve: {
         // 引入模块的时候 import xxx 没有带后缀
         // extension会进行后缀匹配 
-        extensions: ['.js', '.vue', '.json'],
+        extensions: ['.js', '.jsx', '.json'],
         // 配置别名 
         // 代替深层次的目录路径
         alias: {
@@ -57,23 +61,71 @@ module.exports = {
             }
             // include: path.resolve(__dirname, 'src'), //打包的范围
         }, {
+            // 对于私有css组件,使用css-module
             test: /\.scss$/,
             // 将css分离,不合并到js
-            use: ExtractTextPlugin.extract({
-                fallback: "style-loader",
-                // 开启css-module
-                use: [
-                    {
-                        loader: "css-loader?module=true"
-                    },
-                    {
-                        loader: 'postcss-loader'
-                    },
-                    {
-                        loader: "sass-loader"
-                    }],
-            }),
-            exclude: /node_modules/
+            // use: ExtractTextPlugin.extract({
+            //     fallback: "style-loader",
+            //     // 开启css-module
+            //     use: [
+            //         {
+            //             loader: "css-loader?module=true"
+            //         },
+            //         {
+            //             loader: 'postcss-loader'
+            //         },
+            //         {
+            //             loader: "sass-loader"
+            //         }],
+            // }),
+            use: [
+                {
+                    loader: 'style-loader'
+                },
+                {
+                    loader: 'css-loader?module=true'
+                },
+                {
+                    loader: 'postcss-loader'
+                },
+                {
+                    loader: 'sass-loader'
+                }
+            ],
+            include: path.resolve(__dirname, './src/containers')
+        }, {
+            // 对于公共css组件,不使用css-module
+            test: /\.scss$/,
+            // 将css分离,不合并到js
+            // use: ExtractTextPlugin.extract({
+            //     fallback: "style-loader",
+            //     // 开启css-module
+            //     use: [
+            //         {
+            //             loader: "css-loader"
+            //         },
+            //         {
+            //             loader: 'postcss-loader'
+            //         },
+            //         {
+            //             loader: "sass-loader"
+            //         }],
+            // }),
+            use: [
+                {
+                    loader: 'style-loader'
+                },
+                {
+                    loader: 'css-loader'
+                },
+                {
+                    loader: 'postcss-loader'
+                },
+                {
+                    loader: 'sass-loader'
+                }
+            ],
+            include: path.resolve(__dirname, './src/style')
         }, {
             test: /\.css$/,
             // 将css分离,不合并到js
@@ -98,19 +150,24 @@ module.exports = {
     devServer: {
         port: 8084,
         inline: true,
-        hot: true
+        hot: true,
+        // compress: true
     },
     plugins: [
         // new WebpackBrowserPlugin(),
+        // 热加载替换,和入口entry的reload对应,都会被传入开发服务器
+        new webpack.HotModuleReplacementPlugin(),
         // 迁移1到2的插件,如之前的exports.postcss可以写在这里
-         new webpack.LoaderOptionsPlugin({
+        new webpack.LoaderOptionsPlugin({
             options: {
                 postcss: function() {
                     return [
                         autoprefixer, 
                         // px2rem({ remUnit: 37.5 })
                     ]
-                }
+                },
+                // 定位到正确的代码,开发环境使用这个配置
+                devtools: 'inline-source-map',
             }
         }),
         // 自动化生成html插件
@@ -126,8 +183,7 @@ module.exports = {
                 collapseWhitespace:true//删除空格
             }
         }),
-
-        // 压缩css
+        // // 压缩css
         // new OptimizeCssAssetsPlugin({
         //     // 需要匹配的压缩的css
         //     // assetNameRegExp: /\.optimize\.css$/g,
@@ -155,7 +211,9 @@ module.exports = {
         }),
         // 编译时创建一个全局变量,判断开发环境和生产环境
         new webpack.DefinePlugin({
-            PRODUCTION: 'true'
+            'process.env': {
+                NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+            },
         }),
         // 提取公共模块(第三方库)
         new webpack.optimize.CommonsChunkPlugin({
