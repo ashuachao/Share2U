@@ -119,6 +119,7 @@ const browserConfig = {
                 name: 'assets/[name]-[hash:5].[ext]'
             }
         }, {
+            // 解决ejs模板解析不对的问题
             test: /\.html$/,
             use: {
                 loader: 'html-loader?minimize=false'
