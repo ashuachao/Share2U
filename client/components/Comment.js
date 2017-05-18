@@ -1,5 +1,7 @@
-// shouldComponentUpdate -> ComponentWillRecieveProps -> ComponentWillMount -> render -> ComponentDidMount
+//ComponentWillRecieveProps -> shouldComponentUpdate -> ComponentWillMount -> render -> ComponentDidMount
+import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 import React, {Component} from 'react';
+
 export default class Comment extends Component {
     constructor() {
         super();
@@ -7,17 +9,23 @@ export default class Comment extends Component {
             timeString: ''
         }
     }
-    componentWillMount() {
-        console.log('comment mount')
-        this._updateTimeString();
-        this._timer = setInterval(
-            this._updateTimeString.bind(this), 
-            5000
-        )
-    }
-    componentWillUnmount() {
-        clearInterval(this._timer);
-    }
+    // componentWillMount() {
+    //     this._updateTimeString();
+    //     this._timer = setInterval(
+    //         this._updateTimeString.bind(this), 
+    //         5000
+    //     )
+    // }
+    // shouldComponentUpdate(nextProps, nextState) {
+    //     console.log('------------------------->ssssssss')
+    //     if (nextProps.comment.username == this.props.comment.username) {
+    //         return false;
+    //     }
+    //     return true
+    // }
+    // componentWillUnmount() {
+    //     clearInterval(this._timer);
+    // }
     _updateTimeString() {
         const comment = this.props.comment;
         const duration = (+Date.now() - comment.createTime) / 1000;
@@ -40,6 +48,7 @@ export default class Comment extends Component {
             .replace(/`([\S\s]+?)`/g, '<code>$1</code>')
     }
     render() {
+        console.log('render comment')
         return (
             <div className='comment'>
                 <div className='comment-user'>

@@ -6,7 +6,8 @@ const AFTER_DELETE_COMMENT = 'AFTER_DELETE_COMMENT';
 export default (state, action) => {
     if (!state) {
         state = {
-            comments: []
+            comments: [],
+            test: ''
         }
     }
     switch (action.type) {

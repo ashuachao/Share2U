@@ -1,1 +1,3 @@
-this is an webapp containing things share to yourself!
+## isomorphic boilerplate
+## mode: dev && prod
+

@@ -1,3 +1,4 @@
+import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 import React, { Component } from 'react'
 import Comment from './Comment';
 export default class CommentList extends Component {
@@ -10,6 +11,12 @@ export default class CommentList extends Component {
         const comments = this.props.comments || [];
         return (
             <div>
+                <CSSTransitionGroup
+                        transitionName="example"
+                        transitionEnterTimeout={500}
+                        transitionLeaveTimeout={300}
+                        transitionAppear={true}
+                        transitionAppearTimeout={500}>
                 {comments.map((item, i) => 
                     <Comment 
                         comment={item} 
@@ -18,6 +25,7 @@ export default class CommentList extends Component {
                         onDeleteComment={this.handleDeleteComment.bind(this)}
                     >
                     </Comment>)}
+               </CSSTransitionGroup>
             </div>
         )
     }

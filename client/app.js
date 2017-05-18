@@ -1,4 +1,3 @@
-// import Rx from 'rxjs';
 // import axios from 'axios';
 // // 请求数据流
 // var requestStream = Rx.Observable.just('https://api.github.com/users');
@@ -72,18 +71,38 @@
 // const $getData = Rx.Observable.interval(1000).publishReplay(3).refCount()
 
 
-
+import 'rxjs'
 import React, {Component} from 'react';
+// log功能
+import logger from 'redux-logger'
 // jsx -> js对象 -> Dom元素,把reactDOM单独出来是因为有可能吧js对象渲染为DOM/APP
 import ReactDOM from 'react-dom';
 import CommentApp from './containers/CommentApp';
-import { createStore } from 'redux'
+import { createStore, applyMiddleware } from 'redux'
+
+// observable的结合epics的middleware
+import { createEpicMiddleware } from 'redux-observable';
+import { rootEpics } from './epics/index';
+// fastclick 消除300ms延迟
+import initReactFastclick from 'react-fastclick';
+// ele ui
+// import 'element-theme-default';
+initReactFastclick();
 import { Provider } from 'react-redux'
 import commentsReducer from './reducers/comment'
-const store = createStore(commentsReducer);
+import './style/animation.scss'
+import './style/app.scss';
+
+const epicMiddleware = createEpicMiddleware(rootEpics);
+const store = createStore(
+    commentsReducer, 
+    window.REDUX_STATE,
+    applyMiddleware(logger, epicMiddleware)
+)
 ReactDOM.render(
     <Provider store={store}>
         <CommentApp/>
     </Provider>, 
     document.getElementById('root')
 )
+ 

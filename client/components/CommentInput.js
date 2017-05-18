@@ -6,8 +6,8 @@
 // 事件监听方法，handle*。
 // render*开头的方法，有时候 render() 方法里面的内容会分开到不同函数里面进行，这些函数都以 render* 开头。
 // render() 方法。
+// import { Button } from 'antd-mobile'
 import React, { Component, PropTypes} from 'react'
-
 export default class CommentInput extends Component {
 	constructor(props) {
 		super(props);
@@ -61,10 +61,18 @@ export default class CommentInput extends Component {
 	// componentWillMount() {
 	// 	this._loadUsername();
 	// }
+	handleImmutable() {
+		this.setState({
+			immutable: {
+				data: 222
+			}
+		})
+	}
 	componentDidMount() {
 		this.textarea.focus();
 	}
 	render() {
+		console.log('render')
 		return (
 			<div className='comment-input'>
 				<div className='comment-field'>
@@ -87,12 +95,9 @@ export default class CommentInput extends Component {
 						</textarea>
 					</div>
 				</div>
-				<div className='comment-field-button'>
-					<button 
-						onClick={this.handleSubmit.bind(this)}>
-						发布
-					</button>
-				</div>
+				
+				
+				{this.props.children}
 			</div>
 		)
 	}

@@ -1,0 +1,31 @@
+h3{
+    text-align: center;
+}
+.medium{
+    height: 100%;
+    position: relative
+}
+.my_carousel {
+  background: #fff;
+  height: 100%;
+}
+.my_carousel a {
+  display: inline-block;
+  width: 100%;
+  margin: 0; 
+  padding: 0;
+}
+.my_carousel a img {
+  width: 100%;
+  vertical-align: top;
+}
+.login {
+  display: flex;
+  justify-content: space-around;
+  padding: 40px;
+  // width: 100%;
+  position: absolute;
+  bottom: 100px;
+  left: 0px;
+  right: 0px;
+}
