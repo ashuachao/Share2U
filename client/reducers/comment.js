@@ -16,6 +16,7 @@ export default (state, action) => {
                 comments: action.comments
             }
         case ADD_COMMENT:
+            console.log('nextconment===========', [...state.comments, action.comment])
             return {
                 comments: [...state.comments, action.comment]
             }

@@ -6,10 +6,9 @@ import webpack from 'webpack';
 import webpackDevMiddleware from 'koa-webpack-dev-middleware';
 import webpackHotMiddleware from 'koa-webpack-hot-middleware';
 import config from '../build/webpack.dev.js';
-import hook from 'css-modules-require-hook';
 // mongoose 
-import mongoose from 'mongoose';
-import User from './db/Models/UserModel';
+// import mongoose from 'mongoose';
+// import User from './db/Models/UserModel';
 // template
 import views from 'koa-views'
 // static asserts
@@ -19,25 +18,15 @@ import clientRoute from './middlewares/clientRoute';
 // app
 import app from './app';
 import router from './routes/index';
-// hook({
-//     extensions: ['.scss'],
-//     preprocessCss: (data, filename) =>
-//         require('node-sass').renderSync({
-//             data,
-//             file: filename
-//         }).css,
-//     camelCase: true,
-//     generateScopedName: '[name]__[local]__[hash:base64:8]'
-// })
 // const compiler = webpack(config);
-app.use(views(path.resolve(__dirname, '../views'), {
+app.use(staticServer(path.join(__dirname,'../dist/dev')));
+app.use(views(path.resolve(__dirname, '../dist/dev/views'), {
     map: {
         html: 'ejs'
     }
 }));
-app.use(staticServer(path.join(__dirname,'../dist')));
-app.use(router.routes(), router.allowedMethods())
 app.use(clientRoute)
+app.use(router.routes(), router.allowedMethods())
 // app.use(webpackDevMiddleware(compiler, {
 //     noInfo: true,
 //     publicPath: config.output.publicPath,

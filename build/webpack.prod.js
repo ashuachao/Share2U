@@ -14,12 +14,13 @@ const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 // 自动因入库,不用每次import
 const ProvidePlugin = webpack.ProvidePlugin;
+// 不打包node_module
+const nodeExternals = require('webpack-node-externals');
+const entry_browser = './client/app.js'
+const entry_server = './client/containers/CommentApp';
 const browserConfig = {
     entry: {
-        app: [   
-            './client/app.js'
-        ]
-        // chunk: ['react', 'react-dom', 'axios']
+        app: entry_browser
     },
     output: {
         path: path.resolve(__dirname, '../dist/dev'),
@@ -117,6 +118,11 @@ const browserConfig = {
                 limit: 2000,
                 name: 'assets/[name]-[hash:5].[ext]'
             }
+        }, {
+            test: /\.html$/,
+            use: {
+                loader: 'html-loader?minimize=false'
+            }
         }]
     },
     node: {
@@ -151,7 +157,7 @@ const browserConfig = {
         }),
         // 自动化生成html插件
         new htmlWebpackPlugin({
-            filename: 'index.html', //页面的生产名字
+            filename: './views/index.html', //页面的生产名字
             template: 'index.html', //页面模板
             inject: 'body', //js的存放位置
             title: 'webpack demo', //网页title
@@ -230,11 +236,13 @@ const browserConfig = {
     ]
 }
 const serverConfig = {
-    entry: './server/server.js',
+    entry: entry_server,
     output: {
         path: path.resolve(__dirname, '../dist/prod'),
-        filename: '[name].[hash].js',
-        chunkFilename: '[name].chunk.js'
+        filename: 'bundle.js',
+        chunkFilename: '[name].chunk.js',
+        //设置导出类型，web端默认是var，node需要module.exports = xxx的形式  
+        libraryTarget: 'commonjs2'
     },
     target: 'node',
     node: {
@@ -253,45 +261,41 @@ const serverConfig = {
                     plugins: ["transform-decorators-legacy"]
                 }
             }
-        }, {
+        }, 
+        {
             // 对于私有css组件,使用css-module
             test: /\.scss$/,
             // 将css分离,不合并到js
-            use: ExtractTextPlugin.extract({
-                fallback: "style-loader",
+            // use: ExtractTextPlugin.extract({
+            //     fallback: "style-loader",
                 // 开启css-module
                 use: [
                     {
                         loader: "css-loader/locals?module=true"
                     },
                     {
-                        loader: 'postcss-loader'
-                    },
-                    {
                         loader: "sass-loader"
                     }],
-            }),
+            // }),
             include: path.resolve(__dirname, '../client/containers')
         }, {
             // 对于公共css组件,不使用css-module
             test: /\.scss$/,
             // 将css分离,不合并到js
-            use: ExtractTextPlugin.extract({
-                fallback: "style-loader",
+            // use: ExtractTextPlugin.extract({
+            //     fallback: "style-loader",
                 // 开启css-module
                 use: [
                     {
                         loader: "css-loader/locals"
                     },
                     {
-                        loader: 'postcss-loader'
-                    },
-                    {
                         loader: "sass-loader"
                     }],
-            }),
+            // }),
             include: path.resolve(__dirname, '../client/style')
-        }, {
+        }, 
+        {
             test: /\.(ttf|eot|svg|woff|woff2)(\?.+)?$/,
             loader: 'file-loader?name=[hash:12].[ext]'
         }, {
@@ -304,14 +308,6 @@ const serverConfig = {
             }
         }]
     },
-    plugins: [
-        new webpack.optimize.UglifyJsPlugin({
-            compress: {
-                // 警告信息开启
-                warnings: true
-            },
-        }),
-        new webpack.DefinePlugin({'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)})
-    ]
+    externals: [nodeExternals()]
 }
 module.exports = [browserConfig, serverConfig]

@@ -10,6 +10,9 @@
     </script>
 </head>
 <body>
-    <div id="root"></div>
+    <div id="root"><%- html_data %></div>
+    <script>
+        window.REDUX_STATE = <%- JSON.stringify(redux_data) %>
+    </script>
 </body>
 </html>

@@ -6,7 +6,7 @@ import { initComments, deleteComment, afterDeleteComment } from '../reducers/com
 // 负责评论列表数据的加载、初始化和删除
 class CommentListContainer extends Component {
     componentWillMount() {
-        // // 浏览器环境
+        // 浏览器环境
         // if (window) {
         //     this._loadComments();
         // }

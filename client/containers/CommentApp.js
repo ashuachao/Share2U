@@ -19,17 +19,17 @@ export default class CommentApp extends Component {
     }
     render() {
         return (
-                <CSSTransitionGroup
-                    transitionName="example"
-                    transitionEnterTimeout={500}
-                    transitionLeaveTimeout={300}
-                    transitionAppear={true}
-                    transitionAppearTimeout={500}>
-                    <div >
-                        <CommentInput/>
-                        <CommentList />
-                    </div>
-                </CSSTransitionGroup>
+            <CSSTransitionGroup
+                transitionName="example"
+                transitionEnterTimeout={500}
+                transitionLeaveTimeout={300}
+                transitionAppear={true}
+                transitionAppearTimeout={500}>
+                <div >
+                    <CommentInput/>
+                    <CommentList />
+                </div>
+            </CSSTransitionGroup>
         )
     }
 }

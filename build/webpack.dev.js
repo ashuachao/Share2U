@@ -136,7 +136,7 @@ module.exports = {
         // 自动化生成html插件
         new htmlWebpackPlugin({
             filename: 'index.html', //页面的生产名字
-            template: 'index.html', //页面模板
+            template: './views/tpl/index.html', //页面模板
             inject: 'body', //js的存放位置
             title: 'webpack demo', //网页title
         }),

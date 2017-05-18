@@ -48,7 +48,6 @@ export default class Comment extends Component {
             .replace(/`([\S\s]+?)`/g, '<code>$1</code>')
     }
     render() {
-        console.log('render comment')
         return (
             <div className='comment'>
                 <div className='comment-user'>

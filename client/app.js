@@ -77,26 +77,23 @@ import React, {Component} from 'react';
 import logger from 'redux-logger'
 // jsx -> js对象 -> Dom元素,把reactDOM单独出来是因为有可能吧js对象渲染为DOM/APP
 import ReactDOM from 'react-dom';
-import CommentApp from './containers/CommentApp';
 import { createStore, applyMiddleware } from 'redux'
-
 // observable的结合epics的middleware
 import { createEpicMiddleware } from 'redux-observable';
 import { rootEpics } from './epics/index';
 // fastclick 消除300ms延迟
 import initReactFastclick from 'react-fastclick';
-// ele ui
-// import 'element-theme-default';
 initReactFastclick();
 import { Provider } from 'react-redux'
-import commentsReducer from './reducers/comment'
+import commentsReducer from './reducers/comment';
+import CommentApp from './containers/CommentApp';
 import './style/animation.scss'
 import './style/app.scss';
-
+const REDUX_STATE = window.REDUX || {}
 const epicMiddleware = createEpicMiddleware(rootEpics);
 const store = createStore(
     commentsReducer, 
-    window.REDUX_STATE,
+    // REDUX_STATE,
     applyMiddleware(logger, epicMiddleware)
 )
 ReactDOM.render(
@@ -104,5 +101,6 @@ ReactDOM.render(
         <CommentApp/>
     </Provider>, 
     document.getElementById('root')
-)
+)    
+ 
  

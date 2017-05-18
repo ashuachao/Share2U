@@ -95,7 +95,9 @@ export default class CommentInput extends Component {
 						</textarea>
 					</div>
 				</div>
-				
+				<div className='comment-field-button'>
+					<input type='button' value='发布' onClick={this.handleSubmit.bind(this)} />
+				</div>
 				
 				{this.props.children}
 			</div>
