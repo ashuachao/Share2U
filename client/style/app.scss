@@ -1,3 +1,14 @@
+// 设备宽度大于450px的font-size是0.18rem(浏览器)
+@media screen and (min-device-width: 450px) {
+    body {
+        font-size: 0.18rem
+    }
+}
+@media screen and (max-device-width: 450px) {
+    body{
+        font-size: 0.36rem
+    }
+}
 // 通用样式
 html, body{
     width: 100%;
@@ -9,4 +20,15 @@ html, body{
     * {
         box-sizing: border-box;
     }
+}
+input{
+    border: 1px solid #000;
+    font-size: 0.36rem
+}
+textarea{
+    border: 1px solid #000;
+    font-size: 0.36rem
+}
+button{
+    font-size: 0.36rem
 }

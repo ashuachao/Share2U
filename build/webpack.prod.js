@@ -179,9 +179,7 @@ const browserConfig = {
         // })
         // 编译时创建一个全局变量,判断开发环境和生产环境
         new webpack.DefinePlugin({
-            'process.env': {
-                NODE_ENV: JSON.stringify(process.env.NODE_ENV),
-            },
+            'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production')
         }),
         // 提取公共模块(第三方库)
         new webpack.optimize.CommonsChunkPlugin({
@@ -266,34 +264,28 @@ const serverConfig = {
         {
             // 对于私有css组件,使用css-module
             test: /\.scss$/,
-            // 将css分离,不合并到js
-            // use: ExtractTextPlugin.extract({
-            //     fallback: "style-loader",
-                // 开启css-module
-                use: [
-                    {
-                        loader: "css-loader/locals?module=true"
-                    },
-                    {
-                        loader: "sass-loader"
-                    }],
-            // }),
+            use: [
+                {
+                    // loader: "css-loader/locals?module=true"
+                    // 只需要导出css-module的映射关系,不需加载
+                    loader: 'css-loader/locals?modules&camelCase&importLoaders=1&localIdentName=[hash:base64:8]'
+                },
+                {
+                    loader: "sass-loader"
+                }
+            ],
             include: path.resolve(__dirname, '../client/containers')
         }, {
             // 对于公共css组件,不使用css-module
             test: /\.scss$/,
-            // 将css分离,不合并到js
-            // use: ExtractTextPlugin.extract({
-            //     fallback: "style-loader",
-                // 开启css-module
-                use: [
-                    {
-                        loader: "css-loader/locals"
-                    },
-                    {
-                        loader: "sass-loader"
-                    }],
-            // }),
+            use: [
+                {
+                    loader: "css-loader/locals"
+                },
+                {
+                    loader: "sass-loader"
+                }
+            ],
             include: path.resolve(__dirname, '../client/style')
         }, 
         {

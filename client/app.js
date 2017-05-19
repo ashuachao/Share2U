@@ -1,4 +1,3 @@
-// import axios from 'axios';
 // // 请求数据流
 // var requestStream = Rx.Observable.just('https://api.github.com/users');
 // // 只是返回一个promise
@@ -89,11 +88,12 @@ import commentsReducer from './reducers/comment';
 import CommentApp from './containers/CommentApp';
 import './style/animation.scss'
 import './style/app.scss';
-const REDUX_STATE = window.REDUX || {}
+const REDUX_STATE = window.REDUX_STATE || {}
+console.log(REDUX_STATE)
 const epicMiddleware = createEpicMiddleware(rootEpics);
 const store = createStore(
     commentsReducer, 
-    // REDUX_STATE,
+    REDUX_STATE,
     applyMiddleware(logger, epicMiddleware)
 )
 ReactDOM.render(

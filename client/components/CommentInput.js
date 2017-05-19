@@ -72,7 +72,6 @@ export default class CommentInput extends Component {
 		this.textarea.focus();
 	}
 	render() {
-		console.log('render')
 		return (
 			<div className='comment-input'>
 				<div className='comment-field'>

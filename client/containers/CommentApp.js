@@ -6,7 +6,8 @@ import React, {Component} from 'react';
 import CommentInput from './CommentInput';
 import CommentList from './CommentList';
 // import Login from 'containers/Login/Login';
-// import style from './index.scss';
+import style from './index.scss';
+// import '../style/app.scss';
 export default class CommentApp extends Component {
     constructor(props) {
         super(props)
@@ -18,6 +19,7 @@ export default class CommentApp extends Component {
         })
     }
     render() {
+        console.log('render--------');
         return (
             <CSSTransitionGroup
                 transitionName="example"
@@ -25,7 +27,7 @@ export default class CommentApp extends Component {
                 transitionLeaveTimeout={300}
                 transitionAppear={true}
                 transitionAppearTimeout={500}>
-                <div >
+                <div className={style.wrapper}>
                     <CommentInput/>
                     <CommentList />
                 </div>
