@@ -47,20 +47,22 @@ export default class CommentInput extends Component {
 			this.props.onUserNameInputBlur(event.target.value);
 		}
 	}
-	// _saveUsername(name) {
-	// 	localStorage.setItem('username', name);
-	// }
-	// _loadUsername() {
-	// 	const username = localStorage.getItem('username');
-	// 	if (username) {
-	// 		this.setState({
-	// 			username
-	// 		})
-	// 	}
-	// }
-	// componentWillMount() {
-	// 	this._loadUsername();
-	// }
+	_saveUsername(name) {
+		localStorage.setItem('username', name);
+	}
+	_loadUsername() {
+		const username = localStorage.getItem('username');
+		if (username) {
+			this.setState({
+				username
+			})
+		}
+	}
+	componentWillMount() {
+		if (typeof window !== 'undefined') {
+			this._loadUsername();
+		}
+	}
 	handleImmutable() {
 		this.setState({
 			immutable: {

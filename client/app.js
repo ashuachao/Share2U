@@ -69,7 +69,7 @@
 
 // const $getData = Rx.Observable.interval(1000).publishReplay(3).refCount()
 
-
+// ssr客户端还是会进行开销较小的二次渲染的
 import 'rxjs'
 import React, {Component} from 'react';
 // log功能

@@ -179,7 +179,7 @@ const browserConfig = {
         // })
         // 编译时创建一个全局变量,判断开发环境和生产环境
         new webpack.DefinePlugin({
-            'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production')
+            // 'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production')
         }),
         // 提取公共模块(第三方库)
         new webpack.optimize.CommonsChunkPlugin({
@@ -266,9 +266,9 @@ const serverConfig = {
             test: /\.scss$/,
             use: [
                 {
-                    // loader: "css-loader/locals?module=true"
-                    // 只需要导出css-module的映射关系,不需加载
-                    loader: 'css-loader/locals?modules&camelCase&importLoaders=1&localIdentName=[hash:base64:8]'
+                    // 只需要导出css-module的映射关系,不需嵌入css,解决node端不解析css的问题
+                    loader: "css-loader/locals?module=true"
+                    // loader: 'css-loader/locals?modules&camelCase&importLoaders=1&localIdentName=[hash:base64:8]'
                 },
                 {
                     loader: "sass-loader"

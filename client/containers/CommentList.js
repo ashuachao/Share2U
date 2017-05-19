@@ -7,14 +7,14 @@ import { initComments, deleteComment, afterDeleteComment } from '../reducers/com
 class CommentListContainer extends Component {
     componentWillMount() {
         // 浏览器环境
-        // if (window) {
-        //     this._loadComments();
-        // }
+        if (typeof window !== 'undefined') {
+            this._loadComments();
+        }
     }
     _loadComments() {
         let comments = localStorage.getItem('comments');
         comments = comments ? JSON.parse(comments) : [];
-        this.props.initComments(comments);
+        // this.props.initComments(comments);
     }
     handleDeleteComment(index) {
         const { comments } = this.props;
@@ -34,6 +34,7 @@ class CommentListContainer extends Component {
         // }, 1000)
     }
     render () {
+        console.log('render--------');
         return (
         <CommentList
             comments={this.props.comments}
