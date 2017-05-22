@@ -83,13 +83,14 @@ import { rootEpics } from './epics/index';
 // fastclick 消除300ms延迟
 import initReactFastclick from 'react-fastclick';
 initReactFastclick();
+// route
+// import Routers from './routers/index';
 import { Provider } from 'react-redux'
 import commentsReducer from './reducers/comment';
 import CommentApp from './containers/CommentApp';
 import './style/animation.scss'
 import './style/app.scss';
 const REDUX_STATE = window.REDUX_STATE || {}
-console.log(REDUX_STATE)
 const epicMiddleware = createEpicMiddleware(rootEpics);
 const store = createStore(
     commentsReducer, 

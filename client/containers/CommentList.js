@@ -34,7 +34,6 @@ class CommentListContainer extends Component {
         // }, 1000)
     }
     render () {
-        console.log('render--------');
         return (
         <CommentList
             comments={this.props.comments}

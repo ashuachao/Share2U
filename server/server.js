@@ -10,7 +10,8 @@ import config from '../build/webpack.dev.js';
 // import mongoose from 'mongoose';
 // import User from './db/Models/UserModel';
 // template
-import views from 'koa-views'
+import views from 'koa-views';
+import compress from 'koa-compress';
 // static asserts
 import staticServer from 'koa-static';
 // ssr
@@ -19,12 +20,20 @@ import clientRoute from './middlewares/clientRoute';
 import app from './app';
 import router from './routes/index';
 // const compiler = webpack(config);
-app.use(staticServer(path.join(__dirname,'../dist/dev')));
-app.use(views(path.resolve(__dirname, '../dist/dev/views'), {
+app.use(staticServer(path.join(__dirname,'../dist/prod/client')));
+app.use(views(path.resolve(__dirname, '../dist/prod/client/view'), {
     map: {
         html: 'ejs'
     }
 }));
+app.use(compress({
+    filter: function(content_type) {
+        console.log(content_type)
+        return /text/i.test(content_type)
+    },
+    threshold: 2048,
+    flush: require('zlib').Z_SYNC_FLUSH
+}))
 app.use(clientRoute)
 app.use(router.routes(), router.allowedMethods())
 // app.use(webpackDevMiddleware(compiler, {

@@ -1,3 +1,4 @@
+// 生产的时候 前端和服务端的代码都需要打包
 const path = require('path');
 const webpack = require('webpack');
 // 自动补全css代码
@@ -10,6 +11,8 @@ const pxtorem = require('postcss-pxtorem');
 const ExtractTextPlugin = require('extract-text-webpack-plugin'); 
 // css压缩
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+// css精灵图
+const Easysprites = require('postcss-easysprites');
 // 自动压缩代码插件
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 // 自动因入库,不用每次import
@@ -23,7 +26,7 @@ const browserConfig = {
         app: entry_browser
     },
     output: {
-        path: path.resolve(__dirname, '../dist/dev'),
+        path: path.resolve(__dirname, '../dist/prod/client'),
         filename: '[name]-[hash].bundle.js',
         //生产的html存放资源的路径
         //publicPath:'/static/'
@@ -69,10 +72,30 @@ const browserConfig = {
                 // 开启css-module
                 use: [
                     {
-                        loader: "css-loader?module=true"
+                        // loader: "css-loader?module=true"
+                        loader: "css-loader",
+                        options: {
+                            modules: true,//是否支持css-module
+                            camelCase: true,//是否支持xxx-xxx
+                            importLoaders: 1,//是否支持css import
+                            localIdentName: '[name]_[local]'//css-module的命名方法
+                        }
                     },
                     {
-                        loader: 'postcss-loader'
+                        loader: 'postcss-loader',
+                        options: {
+                            plugins: () => [
+                                autoprefixer(), 
+                                pxtorem({
+                                    rootValue: 100,
+                                    propWhiteList: []
+                                }),
+                                Easysprites({
+                                    imagePath: './imgs',
+                                    spritePath: './dist/imgs'
+                                })
+                            ]
+                        }
                     },
                     {
                         loader: "sass-loader"
@@ -91,22 +114,26 @@ const browserConfig = {
                         loader: "css-loader"
                     },
                     {
-                        loader: 'postcss-loader'
+                        loader: 'postcss-loader',
+                        options: {
+                            plugins: () => [
+                                autoprefixer(), 
+                                pxtorem({
+                                    rootValue: 100,
+                                    propWhiteList: []
+                                }),
+                                Easysprites({
+                                    imagePath: './imgs',
+                                    spritePath: './dist/imgs'
+                                })
+                            ]
+                        }
                     },
                     {
                         loader: "sass-loader"
                     }],
             }),
             include: path.resolve(__dirname, '../client/style')
-        }, {
-            test: /\.css$/,
-            // 将css分离,不合并到js
-            use: ExtractTextPlugin.extract({
-                fallback: "style-loader",
-                // 开启css-module
-                // use: "css-loader?module=true!postcss-loader",
-                use: "css-loader!postcss-loader",
-            })
         }, {
             test: /\.(ttf|eot|svg|woff|woff2)(\?.+)?$/,
             loader: 'file-loader?name=[hash:12].[ext]'
@@ -126,9 +153,6 @@ const browserConfig = {
             }
         }]
     },
-    node: {
-        fs: 'empty'
-    },
     // webpack服务器
     devServer: {
         port: 8084,
@@ -142,15 +166,6 @@ const browserConfig = {
         // 迁移1到2的插件,如之前的exports.postcss可以写在这里
         new webpack.LoaderOptionsPlugin({
             options: {
-                postcss: function() {
-                    return [
-                        autoprefixer, 
-                        pxtorem({
-                            rootValue: 100,
-                            propWhiteList: []
-                        })
-                    ]
-                },
                 // 定位到正确的代码,开发环境使用这个配置
                 devtools: 'source-map',
                 modulesDirectories: ['node_modules', path.join(__dirname, '../node_modules')],
@@ -158,7 +173,7 @@ const browserConfig = {
         }),
         // 自动化生成html插件
         new htmlWebpackPlugin({
-            filename: './views/index.html', //页面的生产名字
+            filename: './view/index.html', //页面的生产名字
             template: 'index.html', //页面模板
             inject: 'body', //js的存放位置
             title: 'webpack demo', //网页title
@@ -225,8 +240,12 @@ const browserConfig = {
         new UglifyJsPlugin({
             compress: {
                 // 警告信息开启
-                warnings: true
+                warnings: true,
+                // 删除所有console
+                drop_console: true    
             },
+            // 删除所有注释
+            comments: false,
             // 警告对应到正确的代码行
             sourceMap: true,
             // // 压缩loaders    
@@ -237,7 +256,7 @@ const browserConfig = {
 const serverConfig = {
     entry: entry_server,
     output: {
-        path: path.resolve(__dirname, '../dist/prod'),
+        path: path.resolve(__dirname, '../dist/prod/server'),
         filename: 'bundle.js',
         chunkFilename: '[name].chunk.js',
         //设置导出类型，web端默认是var，node需要module.exports = xxx的形式  
@@ -267,8 +286,14 @@ const serverConfig = {
             use: [
                 {
                     // 只需要导出css-module的映射关系,不需嵌入css,解决node端不解析css的问题
-                    loader: "css-loader/locals?module=true"
-                    // loader: 'css-loader/locals?modules&camelCase&importLoaders=1&localIdentName=[hash:base64:8]'
+                    // loader: "css-loader/locals?module=true"
+                    loader: 'css-loader/locals',
+                    options: {
+                        modules: true,
+                        camelCase: true,
+                        importLoaders: 1,
+                        localIdentName: '[name]_[local]'
+                    }
                 },
                 {
                     loader: "sass-loader"

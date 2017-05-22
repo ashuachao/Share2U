@@ -1,3 +1,4 @@
+import { Link,Route } from 'react-router-dom'
 // 进入组件和离开组件的动画
 import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 // import style from './index.scss';
@@ -5,6 +6,7 @@ import React, {Component} from 'react';
 // jsx -> js对象 -> Dom元素,把reactDOM单独出来是因为有可能吧js对象渲染为DOM/APP
 import CommentInput from './CommentInput';
 import CommentList from './CommentList';
+import LogMsg from '../components/LogMsg';
 // import Login from 'containers/Login/Login';
 import style from './index.scss';
 export default class CommentApp extends Component {
@@ -18,19 +20,19 @@ export default class CommentApp extends Component {
         })
     }
     render() {
-        console.log('renderAPP------------------')
         return (
-            <CSSTransitionGroup
-                transitionName="example"
-                transitionEnterTimeout={500}
-                transitionLeaveTimeout={300}
-                transitionAppear={true}
-                transitionAppearTimeout={500}>
-                <div>
-                    <CommentInput/>
-                    <CommentList />
-                </div>
-            </CSSTransitionGroup>
+            // <CSSTransitionGroup
+            //     transitionName="example"
+            //     transitionEnterTimeout={500}
+            //     transitionLeaveTimeout={300}
+            //     transitionAppear={true}
+            //     transitionAppearTimeout={500}>
+            <div className={style.wrapper}>
+                <CommentInput/>
+                <CommentList />
+                <Link to='/LogMsg'>ToLogMsg</Link>
+            </div>
+            // </CSSTransitionGroup>
         )
     }
 }
