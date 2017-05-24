@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import CommentInput from '../components/CommentInput';
-import { addComment } from '../reducers/comment';
+import CommentInput from 'components/Comment/CommentInput';
+import { addComment } from 'reducers/comment';
 // import Login from 'containers/Login/Login'
 class CommentInputContainer extends Component {
     constructor() {
@@ -55,7 +55,7 @@ class CommentInputContainer extends Component {
 // 等于改变了props,触发了componentReceive -> shouleComponentUpdate -> componentWillUpdate -> render -> componentDidUpdate
 const mapStateToProps = (state) => {
   return {
-      comments: state.comments
+      comments: state.comment.comments
   }
 }
 

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import CommentList from '../components/CommentList';
-import { initComments, deleteComment, afterDeleteComment } from '../reducers/comment';
+import CommentList from 'components/Comment/CommentList';
+import { initComments, deleteComment, afterDeleteComment } from 'reducers/comment';
 // smart组件 
 // 负责评论列表数据的加载、初始化和删除
 class CommentListContainer extends Component {
@@ -43,7 +43,7 @@ class CommentListContainer extends Component {
 }
 const mapStateToProps = (state) => {
   return {
-    comments: state.comments
+    comments: state.comment.comments
   }
 }
 

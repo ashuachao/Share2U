@@ -19,6 +19,7 @@
     "isomorphic-fetch": "^2.2.1",
     "koa": "^2.2.0",
     "koa-compress": "^2.0.0",
+    "koa-convert": "^1.2.0",
     "koa-router": "^7.1.1",
     "koa-static": "^3.0.0",
     "koa-views": "^6.0.2",
@@ -94,6 +95,7 @@
     "clean:dev": "rimraf dist/dev/*",
     "clean:prod": "rimraf dist/prod/*",
     "dev": "npm run clean:dev && webpack-dev-server --config ./build/webpack.dev.js --progress",
+    "dev:server": "npm run clean:dev && nodemon ./server/server.dev.js localhost 8888 --exec babel-node",
     "prod": "npm run clean:prod && webpack --config ./build/webpack.prod.js --progress --colors",
     "start": "nodemon ./server/server.js",
     "browser-sync": "babel-node browser_sync.js --presets es2015,stage-2"

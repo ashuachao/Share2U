@@ -33,10 +33,12 @@ module.exports = {
         // 配置别名 
         // 代替深层次的目录路径
         alias: {
-            '@': path.resolve(__dirname, 'client'),
-            'containers': path.resolve(__dirname, 'client/containers'),
-            'components': path.resolve(__dirname, 'client/components'),
-            'images': path.resolve(__dirname, 'client/images')
+            '@': path.resolve(__dirname, '../client'),
+            'containers': path.resolve(__dirname, '../client/containers'),
+            'components': path.resolve(__dirname, '../client/components'),
+            'reducers': path.resolve(__dirname, '../client/reducers'),
+            'images': path.resolve(__dirname, '../client/images'),
+            'util': path.resolve(__dirname, '../client/util')
         },
         // 模块重命名
         modules: [
@@ -93,7 +95,7 @@ module.exports = {
                 {
                     loader: "sass-loader"
                 }],
-            include: path.resolve(__dirname, '../client/containers')
+            include: [path.resolve(__dirname, '../client/containers'), path.resolve(__dirname, '../client/components')]
         }, {
             // 对于公共css组件,不使用css-module
             test: /\.scss$/,
@@ -126,6 +128,19 @@ module.exports = {
                     loader: "sass-loader"
                 }],
             include: path.resolve(__dirname, '../client/style')
+        }, {
+            // 对于公共css组件,不使用css-module
+            test: /\.css$/,
+            // 将css分离,不合并到js
+                // 开启css-module
+            use: [
+                {
+                    loader: 'style-loader'
+                },
+                {
+                    loader: "css-loader"
+                }
+            ]
         }, {
             test: /\.(ttf|eot|svg|woff|woff2)(\?.+)?$/,
             loader: 'file-loader?name=[hash:12].[ext]'
@@ -190,13 +205,13 @@ module.exports = {
             filename: 'chunk.js',
             // 自动分离chunk
             // 不需要再entry里面定义chunk入口了
-            minChunks: ({ resource }) => (
-                resource &&
+            minChunks: ({ resource }) => {
+                return resource &&
                 // resource代表加载模块的绝对路径
                 // 判断条件:模块来自node_modules目录 && 以.js结尾
                 resource.indexOf('node_modules') >= 0 &&
                 resource.match(/\.js$/)
-            ),
+            },
         }),
         // 将按需加载async的文件的公共的第三方引用库提取出来
         new webpack.optimize.CommonsChunkPlugin({

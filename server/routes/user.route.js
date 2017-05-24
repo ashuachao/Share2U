@@ -1,8 +1,8 @@
 import Router from 'koa-router';
+import UserController from '../controller/user.controller';
 const router = new Router({
     prefix: '/user'
 });
-router.get('/getUser', () => {
-
-})
+router.get('/getUsers', UserController.getUsers)
+router.get('/signInOnce', UserController.signInOnce)
 export default router;

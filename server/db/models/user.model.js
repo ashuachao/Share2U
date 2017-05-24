@@ -46,12 +46,12 @@ userSchema.statics.countUser = function(userName) {
     return this.count({userName: userName});
 }
 // pre save
-userSchema.pre('save', (next) => {
-    console.log('presave')
-    if('invalid' == this.userName) {
-        return next(new Error('invalid name'))
-    }
-    next();
-})
+// userSchema.pre('save', (next) => {
+//     console.log('presave')
+//     if('invalid' == this.userName) {
+//         return next(new Error('invalid name'))
+//     }
+//     next();
+// })
 const UserModel = mongoose.model('User', userSchema);
 export default UserModel;

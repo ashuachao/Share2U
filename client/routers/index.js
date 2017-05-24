@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
-import { ConnectedRouter, routerReducer, routerMiddleware, push } from 'react-router-redux'
-import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
-import CommentApp from '../containers/CommentApp';
-import LogMsg from '../components/LogMsg';
+import {BrowserRouter as Router, Route, Switch, Redirect} from 'react-router-dom';
+import CommentApp from 'containers/Comment/CommentApp';
+import CommentInput from 'containers/Comment/CommentInput'
+import Login from 'containers/Login/Login';
 const RouterConfig = (
     <Router>
-        <div>
-            <Route path='/LogMsg' component={LogMsg}/>
+        <div className='container_router'>
+            <Route path='/' exact component={CommentApp}/>
+            <Route path='/Login' component={Login}/>
         </div>
     </Router>
 )
