@@ -1,12 +1,14 @@
 import React, { Component } from 'react'
 import { addComment, testImutable } from '../../reducers/comment';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import { Redirect, withRouter } from 'react-router-dom';
 import { signIn } from 'reducers/login';
 import { Carousel, WhiteSpace, WingBlank, Button } from 'antd-mobile';
 import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 import style from './index.scss';
 import Loading from 'components/Loading/Loading';
+
+@withRouter
 @connect(
     (state) => {
         return {

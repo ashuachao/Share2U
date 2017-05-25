@@ -75,6 +75,7 @@ export default class CommentApp extends Component {
                         onClick={this.handleSignOut.bind(this)}>
                         SIGNOUT
                     </Button>
+                    <Link to='/404'>404</Link>
                 </div>
             </CSSTransitionGroup>
         )  
