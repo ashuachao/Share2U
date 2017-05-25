@@ -38,7 +38,8 @@ module.exports = {
             'components': path.resolve(__dirname, '../client/components'),
             'reducers': path.resolve(__dirname, '../client/reducers'),
             'images': path.resolve(__dirname, '../client/images'),
-            'util': path.resolve(__dirname, '../client/util')
+            'util': path.resolve(__dirname, '../client/util'),
+            'routers': path.resolve(__dirname, '../client/routers')
         },
         // 模块重命名
         modules: [

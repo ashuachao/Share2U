@@ -20,7 +20,7 @@ const ProvidePlugin = webpack.ProvidePlugin;
 // 不打包node_module
 const nodeExternals = require('webpack-node-externals');
 const entry_browser = './client/app.js'
-const entry_server = './client/containers/CommentApp';
+const entry_server = './client/containers/App/App';
 const browserConfig = {
     entry: {
         app: entry_browser
@@ -40,10 +40,13 @@ const browserConfig = {
         // 配置别名 
         // 代替深层次的目录路径
         alias: {
-            '@': path.resolve(__dirname, 'client'),
-            'containers': path.resolve(__dirname, 'client/containers'),
-            'components': path.resolve(__dirname, 'client/components'),
-            'images': path.resolve(__dirname, 'client/imags')
+            '@': path.resolve(__dirname, '../client'),
+            'containers': path.resolve(__dirname, '../client/containers'),
+            'components': path.resolve(__dirname, '../client/components'),
+            'reducers': path.resolve(__dirname, '../client/reducers'),
+            'images': path.resolve(__dirname, '../client/images'),
+            'util': path.resolve(__dirname, '../client/util'),
+            'routers': path.resolve(__dirname, '../client/routers')
         },
         // 模块重命名
         modules: [
@@ -60,7 +63,7 @@ const browserConfig = {
                 loader: 'babel-loader',
                 options: {
                     presets: ['env', 'react'],
-                    plugins: ["transform-decorators-legacy"]
+                    plugins: ["transform-decorators-legacy", "syntax-dynamic-import"]
                 }
             }
         }, {
@@ -101,7 +104,7 @@ const browserConfig = {
                         loader: "sass-loader"
                     }],
             }),
-            include: path.resolve(__dirname, '../client/containers')
+            include: [path.resolve(__dirname, '../client/containers'), path.resolve(__dirname, '../client/components')]
         }, {
             // 对于公共css组件,不使用css-module
             test: /\.scss$/,
@@ -134,6 +137,20 @@ const browserConfig = {
                     }],
             }),
             include: path.resolve(__dirname, '../client/style')
+        }, {
+            // 对于公共css组件,不使用css-module
+            test: /\.css$/,
+            // 将css分离,不合并到js
+                // 开启css-module
+            use: ExtractTextPlugin.extract({
+                fallback: "style-loader",
+                // 开启css-module
+                use: [
+                    {
+                        loader: "css-loader"
+                    }
+                ],
+            })
         }, {
             test: /\.(ttf|eot|svg|woff|woff2)(\?.+)?$/,
             loader: 'file-loader?name=[hash:12].[ext]'
@@ -267,6 +284,17 @@ const serverConfig = {
         __filename: true,
         __dirname: false
     },
+    resolve: {
+        alias: {
+            '@': path.resolve(__dirname, '../client'),
+            'containers': path.resolve(__dirname, '../client/containers'),
+            'components': path.resolve(__dirname, '../client/components'),
+            'reducers': path.resolve(__dirname, '../client/reducers'),
+            'images': path.resolve(__dirname, '../client/images'),
+            'util': path.resolve(__dirname, '../client/util'),
+            'routers': path.resolve(__dirname, '../client/routers')
+        }
+    },
     module: {
         rules: [{
             test: /\.(js|jsx)$/,
@@ -276,7 +304,7 @@ const serverConfig = {
                 loader: 'babel-loader',
                 options: {
                     presets: ['env', 'react'],
-                    plugins: ["transform-decorators-legacy"]
+                    plugins: ["transform-decorators-legacy", "syntax-dynamic-import"]
                 }
             }
         }, 
@@ -299,7 +327,21 @@ const serverConfig = {
                     loader: "sass-loader"
                 }
             ],
-            include: path.resolve(__dirname, '../client/containers')
+            include: [path.resolve(__dirname, '../client/containers'), path.resolve(__dirname, '../client/components')]
+        }, {
+            // 对于公共css组件,不使用css-module
+            test: /\.css$/,
+            // 将css分离,不合并到js
+                // 开启css-module
+            use: ExtractTextPlugin.extract({
+                fallback: "style-loader",
+                // 开启css-module
+                use: [
+                    {
+                        loader: "css-loader"
+                    }
+                ],
+            })
         }, {
             // 对于公共css组件,不使用css-module
             test: /\.scss$/,

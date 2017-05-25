@@ -3,7 +3,6 @@ import { Link,Route,BrowserRouter as Router, withRouter, Redirect } from 'react-
 import { Button, Tag } from 'antd-mobile';
 // 进入组件和离开组件的动画
 import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
-// import style from './index.scss';
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 // jsx -> js对象 -> Dom元素,把reactDOM单独出来是因为有可能吧js对象渲染为DOM/APP
@@ -81,4 +80,3 @@ export default class CommentApp extends Component {
         )  
     }
 }
-// export default WrapWithLoadData(CommentApp, 'comment');
