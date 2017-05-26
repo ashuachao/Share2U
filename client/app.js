@@ -15,8 +15,6 @@ import rootEpics from './epics/index';
 import initReactFastclick from 'react-fastclick';
 // route
 import Routers from './routers/index';
-// http fetch
-import 'isomorphic-fetch';
 import { Provider } from 'react-redux'
 import rootReducer from './reducers/index';
 import './style/animation.scss'

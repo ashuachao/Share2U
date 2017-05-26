@@ -10,8 +10,9 @@ import CommentInput from './CommentInput';
 import CommentList from './CommentList';
 import Loading from 'components/Loading/Loading';
 // import Login from 'containers/Login/Login';
-import { signOut } from 'reducers/login';
+import { signIn, signOut } from 'reducers/login';
 import style from './index.scss';
+import axios from 'axios';
 // bring history
 @withRouter
 @connect(
@@ -24,10 +25,12 @@ import style from './index.scss';
         return {
             signOutAction: () => {
                 dispatch(signOut())
+            },
+            signInAction: () => {
+                dispatch(signIn())
             }
         }
     }
-
 )
 export default class CommentApp extends Component {
     constructor(props) {
@@ -44,17 +47,12 @@ export default class CommentApp extends Component {
     }
     _redirectSignOutValidate(validataProps) {
         const { login, history } = validataProps;
-        if (login.isAuthenticating_out && login.isAuthenticate_success) {
+        if (!login.isAuthenticating_in && !login.user) {
             history.push('Login', {})
-        } else if (login.isAuthenticating_out && login.isAuthenticate_fail){
-            alert('登出错误')
         }
     }
     _redirectSignInValidate(validataProps) {
-        const { login, history } = validataProps;
-        // if (!login.isAuthenticating_in && !login.isAuthenticate_success) {
-        !login.user && history.push('Login', {});
-        // }
+        this.props.signInAction()
     }
     render() {
         const userName = getDataDeep(['user', 'userName'], this.props.login);
@@ -73,6 +71,10 @@ export default class CommentApp extends Component {
                         type='warning'
                         onClick={this.handleSignOut.bind(this)}>
                         SIGNOUT
+                    </Button>
+                    <Button 
+                        onClick={this.handleTest.bind(this)}>
+                        TEST
                     </Button>
                     <Link to='/404'>404</Link>
                 </div>

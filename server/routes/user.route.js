@@ -5,4 +5,5 @@ const router = new Router({
 });
 router.get('/getUsers', UserController.getUsers)
 router.get('/signInOnce', UserController.signInOnce)
+router.get('/signOut', UserController.signOut)
 export default router;
