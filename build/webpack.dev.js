@@ -9,8 +9,6 @@ const htmlWebpackPlugin = require('html-webpack-plugin');
 const pxtorem = require('postcss-pxtorem');
 // css单独生成
 const ExtractTextPlugin = require('extract-text-webpack-plugin'); 
-// css精灵图
-const Easysprites = require('postcss-easysprites');
 // 自动因入库,不用每次import
 const ProvidePlugin = webpack.ProvidePlugin;
 const entry_browser = './client/app.js'
@@ -19,12 +17,12 @@ module.exports = {
         app: entry_browser
     },
     output: {
-        path: path.resolve(__dirname, '../dist/dev/client'),
+        path: path.resolve(__dirname, '../assets/dev'),
         filename: '[name]-[hash].bundle.js',
         //生产的html存放资源的路径
         // publicPath: path.resolve(__dirname, '../dist/dev/client'),
         // 导出的chunk的名字,按需加载的导出文件名字
-        chunkFilename: '[name].chunk.js'
+        chunkFilename: '[name]-[hash].chunk.js'
     },
     resolve: {
         // 引入模块的时候 import xxx 没有带后缀
@@ -85,10 +83,6 @@ module.exports = {
                             pxtorem({
                                 rootValue: 100,
                                 propWhiteList: []
-                            }),
-                            Easysprites({
-                                imagePath: './imgs',
-                                spritePath: './dist/imgs'
                             })
                         ]
                     }
@@ -117,10 +111,6 @@ module.exports = {
                             pxtorem({
                                 rootValue: 100,
                                 propWhiteList: []
-                            }),
-                            Easysprites({
-                                imagePath: './imgs',
-                                spritePath: './dist/imgs'
                             })
                         ]
                     }
@@ -144,14 +134,18 @@ module.exports = {
             ]
         }, {
             test: /\.(ttf|eot|svg|woff|woff2)(\?.+)?$/,
-            loader: 'file-loader?name=[hash:12].[ext]'
+            loader: 'file-loader',
+            query: {
+                name: 'svg/[hash:12].[ext]'
+            }
         }, {
             // 图片大小小于20kb会返回dataURL
             test: /\.(png|jpg|gif|svg|jpeg)$/i,
             loader: 'url-loader',
             query: {
+                // 低于20k以base64存储
                 limit: 2000,
-                name: 'assets/[name]-[hash:5].[ext]'
+                name: 'imgs/[name]-[hash:5].[ext]'
             }
         }, {
             // 解决ejs模板解析不对的问题
@@ -167,7 +161,7 @@ module.exports = {
         inline: true,
         hot: true,
         // compress: true
-        contentBase: path.resolve(__dirname, '../dist/dev/client')
+        contentBase: path.resolve(__dirname, '../assets/client')
     },
     plugins: [
         // 热加载替换,和入口entry的reload对应,都会被传入开发服务器

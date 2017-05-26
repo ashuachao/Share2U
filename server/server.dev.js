@@ -43,9 +43,9 @@ const CONFIG = {
 }
 app.use(session(CONFIG, app));
 // static assert
-app.use(staticServer(path.join(__dirname,'../dist/dev/client')));
+app.use(staticServer(path.join(__dirname,'../assets/dev')));
 // views template
-app.use(views(path.resolve(__dirname, '../dist/dev/client/view'), {
+app.use(views(path.resolve(__dirname, '../assets/view'), {
     map: {
         html: 'ejs'
     }

@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import { createStore } from 'redux';
 import rootReducer from '../../client/reducers/comment';
 import ReactDOMServer from 'react-dom/server';
-import App from '../../dist/prod/server/bundle';
+import App from '../../assets/prod/server/bundle';
 import { StaticRouter } from 'react-router-dom';
 const initial_server_data = {
     comments: [

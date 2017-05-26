@@ -26,11 +26,18 @@ import Loading from 'components/Loading/Loading';
 export default class Login extends Component{
     constructor(props) {
         super(props);
+        /**
+         * 通过js引入的图片webpack不会打包
+         * 通过require的东西会被打包到bundle
+         * 返回的是imgs/xxx.jpeg
+         * 即url-loader处理过的路径
+         */
         this.state={
             data: [
-                'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1495622219844&di=63a566b3a86fa8f4343ba21d289be495&imgtype=0&src=http%3A%2F%2Fimage.tianjimedia.com%2FuploadImages%2F2017%2F137%2F45%2FV338CS7769K3_timg.jpg',
-                'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1495622219844&di=b170d241f77b22805d428b9634a786ed&imgtype=0&src=http%3A%2F%2Fimg.zcool.cn%2Fcommunity%2F01445b56f1ef176ac7257d207ce87d.jpg%40900w_1l_2o_100sh.jpg',
-                'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1495622219844&di=7edff1a2860c00c7209d514c47c548c6&imgtype=0&src=http%3A%2F%2Fs15.sinaimg.cn%2Fmw690%2F001o5iZ4gy6IGX57OTY8e%26690'
+                require('images/43159800e84286929d5462183144176f.jpeg'),
+                require('images/1b47bb675b7deb8df6e3527363098882.jpeg'),
+                require('images/acf4842e063a80de2a86c15f17b0430a.jpg'),
+                require('images/ff08c0582da0431d70a99098a4132c38.jpeg')
             ]
         }
     }

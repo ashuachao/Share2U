@@ -26,12 +26,12 @@ const browserConfig = {
         app: entry_browser
     },
     output: {
-        path: path.resolve(__dirname, '../dist/prod/client'),
+        path: path.resolve(__dirname, '../assets/prod'),
         filename: '[name]-[hash].bundle.js',
         //生产的html存放资源的路径
         //publicPath:'/static/'
         // 导出的chunk的名字,按需加载的导出文件名字
-        chunkFilename: '[name].chunk.js'
+        chunkFilename: '[name]-[hash].chunk.js'
     },
     resolve: {
         // 引入模块的时候 import xxx 没有带后缀
@@ -94,8 +94,8 @@ const browserConfig = {
                                     propWhiteList: []
                                 }),
                                 Easysprites({
-                                    imagePath: './imgs',
-                                    spritePath: './dist/imgs'
+                                    imagePath: './client/images',
+                                    spritePath: './assets/prod/imgs_sprite'
                                 })
                             ]
                         }
@@ -126,8 +126,8 @@ const browserConfig = {
                                     propWhiteList: []
                                 }),
                                 Easysprites({
-                                    imagePath: './imgs',
-                                    spritePath: './dist/imgs'
+                                    imagePath: './client/images',
+                                    spritePath: './assets/prod/imgs_sprite'
                                 })
                             ]
                         }
@@ -153,14 +153,17 @@ const browserConfig = {
             })
         }, {
             test: /\.(ttf|eot|svg|woff|woff2)(\?.+)?$/,
-            loader: 'file-loader?name=[hash:12].[ext]'
+            loader: 'file-loader',
+            query: {
+                name: 'svg/[hash:12].[ext]'
+            }
         }, {
             // 图片大小小于20kb会返回dataURL
             test: /\.(png|jpg|gif|svg|jpeg)$/i,
             loader: 'url-loader',
             query: {
                 limit: 2000,
-                name: 'assets/[name]-[hash:5].[ext]'
+                name: 'imgs/[name]-[hash:5].[ext]'
             }
         }, {
             // 解决ejs模板解析不对的问题
@@ -169,13 +172,6 @@ const browserConfig = {
                 loader: 'html-loader?minimize=false'
             }
         }]
-    },
-    // webpack服务器
-    devServer: {
-        port: 8084,
-        inline: true,
-        hot: true,
-        // compress: true
     },
     plugins: [
         // 热加载替换,和入口entry的reload对应,都会被传入开发服务器
@@ -190,7 +186,7 @@ const browserConfig = {
         }),
         // 自动化生成html插件
         new htmlWebpackPlugin({
-            filename: './view/index.html', //页面的生产名字
+            filename: 'index.html', //页面的生产名字
             template: 'index.html', //页面模板
             inject: 'body', //js的存放位置
             title: 'webpack demo', //网页title
@@ -199,7 +195,7 @@ const browserConfig = {
                 collapseWhitespace:true//删除空格
             }
         }),
-        // 提取css代码
+        // 提取css代码  bug?生成路径变为css/style.css, 里面引用的图片路径不会响应地改变
         new ExtractTextPlugin({
             filename: "style.[contenthash].css",
             disable: false,
@@ -273,7 +269,7 @@ const browserConfig = {
 const serverConfig = {
     entry: entry_server,
     output: {
-        path: path.resolve(__dirname, '../dist/prod/server'),
+        path: path.resolve(__dirname, '../assets/prod/server'),
         filename: 'bundle.js',
         chunkFilename: '[name].chunk.js',
         //设置导出类型，web端默认是var，node需要module.exports = xxx的形式  
@@ -357,14 +353,14 @@ const serverConfig = {
         }, 
         {
             test: /\.(ttf|eot|svg|woff|woff2)(\?.+)?$/,
-            loader: 'file-loader?name=[hash:12].[ext]'
+            loader: 'file-loader?name=[hash:12].[ext]',
         }, {
             // 图片大小小于20kb会返回dataURL
             test: /\.(png|jpg|gif|svg|jpeg)$/i,
             loader: 'url-loader',
             query: {
                 limit: 2000,
-                name: 'assets/[name]-[hash:5].[ext]'
+                name: 'imgs/[name]-[hash:5].[ext]'
             }
         }]
     },

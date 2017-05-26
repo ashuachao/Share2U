@@ -36,47 +36,73 @@ export default class CommentApp extends Component {
     constructor(props) {
         super(props)
     }
-    handleSignOut(e) {
-        this.props.signOutAction();
-    }
     componentDidMount() {
         this._redirectSignInValidate(this.props)
     }
     componentWillReceiveProps(nextProps) {
         this._redirectSignOutValidate(nextProps)
     }
+    /**
+     * 登出
+     * 
+     * @param {any} e
+     * 
+     * @memberOf CommentApp
+     */
+    handleSignOut(e) {
+        this.props.signOutAction();
+    }
+    /**
+     * 验证需要跳转登录
+     * 
+     * @param {any} validataProps
+     * 
+     * @memberOf CommentApp
+     */
     _redirectSignOutValidate(validataProps) {
         const { login, history } = validataProps;
         if (!login.isAuthenticating_in && !login.user) {
             history.push('Login', {})
         }
     }
+    /**
+     * 验证用户是否已登录
+     * 
+     * @param {any} validataProps
+     * 
+     * @memberOf CommentApp
+     */
     _redirectSignInValidate(validataProps) {
-        this.props.signInAction()
+        !this.props.login.user && this.props.signInAction()
     }
     render() {
         const userName = getDataDeep(['user', 'userName'], this.props.login);
         return (
             <CSSTransitionGroup
-                transitionName="example"
+                transitionName="slideIn"
                 transitionEnterTimeout={500}
                 transitionLeaveTimeout={300}
                 transitionAppear={true}
                 transitionAppearTimeout={500}>
                 <div className={style.wrapper}>
-                    <Tag data-seed="logId">{`welcome, ${userName}`}</Tag>
-                    <CommentInput/>
-                    <CommentList />
-                    <Button 
-                        type='warning'
-                        onClick={this.handleSignOut.bind(this)}>
-                        SIGNOUT
-                    </Button>
-                    <Button 
-                        onClick={this.handleTest.bind(this)}>
-                        TEST
-                    </Button>
-                    <Link to='/404'>404</Link>
+                    <div className={style.container}>
+                        <div className={style.header}>
+                            <Tag data-seed="logId">
+                                {`welcome, ${userName}`}
+                            </Tag>
+                        </div>
+                        <div className={style.content}>
+                            <CommentInput/>
+                            <CommentList />
+                        </div>
+                        <div className={style.footer}>
+                            <Button 
+                                type='warning'
+                                onClick={this.handleSignOut.bind(this)}>
+                                SIGNOUT
+                            </Button>
+                        </div>
+                    </div>
                 </div>
             </CSSTransitionGroup>
         )  

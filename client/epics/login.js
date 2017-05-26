@@ -2,7 +2,6 @@ import { combineEpics } from 'redux-observable';
 import axios from 'axios';
 export const signInEpics= action$ => 
     action$.ofType('SIGN_IN')
-        .delay(3000)
         .mergeMap(action => (
             axios.get('/api/user/signInOnce')
                 .then((res) => {
