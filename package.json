@@ -92,6 +92,7 @@
     "webpack-browser-plugin": "^1.0.20",
     "webpack-dev-middleware": "^1.10.2",
     "webpack-dev-server": "^2.4.2",
+    "webpack-merge": "^4.1.0",
     "webpack-node-externals": "^1.6.0"
   },
   "scripts": {

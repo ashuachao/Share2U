@@ -31,7 +31,17 @@ const browserConfig = {
         //生产的html存放资源的路径
         //publicPath:'/static/'
         // 导出的chunk的名字,按需加载的导出文件名字
-        chunkFilename: '[name]-[hash].chunk.js'
+        chunkFilename: '[name]-[hash].chunk.js',
+        // 读到了externals中的key时，需要以umd的方式去获取资源名
+        libraryTarget: 'umd'
+    },
+    // 使用外部扩展,webpack解析key的时候,默认使用外部的扩展
+    externals: {
+        'react': 'React',
+        'react-dom': 'ReactDOM',
+        'axios': 'axios',
+        'redux': 'Redux',
+        'react-router-dom': 'ReactRouterDOM'
     },
     resolve: {
         // 引入模块的时候 import xxx 没有带后缀
@@ -179,8 +189,6 @@ const browserConfig = {
         // 迁移1到2的插件,如之前的exports.postcss可以写在这里
         new webpack.LoaderOptionsPlugin({
             options: {
-                // 定位到正确的代码,开发环境使用这个配置
-                devtools: 'source-map',
                 modulesDirectories: ['node_modules', path.join(__dirname, '../node_modules')],
             }
         }),
@@ -201,13 +209,14 @@ const browserConfig = {
             disable: false,
             allChunks: true
         }),
-        // // 自动引入库
-        // new ProvidePlugin({
-            
-        // })
+        // 自动引入库,解析到key为赋值的变量的时候module自动加载value
+        // 加载value的时候,上面配置的externals回去找全局的ReactDOM
+        new ProvidePlugin({
+            'react': 'react'
+        }),
         // 编译时创建一个全局变量,判断开发环境和生产环境
         new webpack.DefinePlugin({
-            // 'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production')
+            'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production')
         }),
         // 提取公共模块(第三方库)
         new webpack.optimize.CommonsChunkPlugin({
@@ -222,7 +231,7 @@ const browserConfig = {
                 // 判断条件:模块来自node_modules目录 && 以.js结尾
                 resource.indexOf('node_modules') >= 0 &&
                 resource.match(/\.js$/)
-            ),
+            )
         }),
         // 将按需加载async的文件的公共的第三方引用库提取出来
         new webpack.optimize.CommonsChunkPlugin({
@@ -260,7 +269,7 @@ const browserConfig = {
             // 删除所有注释
             comments: false,
             // 警告对应到正确的代码行
-            sourceMap: true,
+            // sourceMap: true,
             // // 压缩loaders    
             // minimize: true
         })

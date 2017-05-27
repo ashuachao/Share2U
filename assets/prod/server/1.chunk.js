@@ -1,7 +1,20 @@
 exports.ids = [1];
-exports.modules = {
-
-/***/ 14:
+exports.modules = [
+/* 0 */,
+/* 1 */,
+/* 2 */,
+/* 3 */,
+/* 4 */,
+/* 5 */,
+/* 6 */,
+/* 7 */,
+/* 8 */,
+/* 9 */,
+/* 10 */,
+/* 11 */,
+/* 12 */,
+/* 13 */,
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12,41 +25,41 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = undefined;
 
-var _css = __webpack_require__(31);
+var _css = __webpack_require__(35);
 
-var _button = __webpack_require__(30);
+var _button = __webpack_require__(34);
 
 var _button2 = _interopRequireDefault(_button);
 
-var _css2 = __webpack_require__(35);
+var _css2 = __webpack_require__(39);
 
-var _carousel = __webpack_require__(34);
+var _carousel = __webpack_require__(38);
 
 var _carousel2 = _interopRequireDefault(_carousel);
 
-var _getPrototypeOf = __webpack_require__(1);
+var _getPrototypeOf = __webpack_require__(0);
 
 var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
 
-var _classCallCheck2 = __webpack_require__(2);
+var _classCallCheck2 = __webpack_require__(1);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(3);
+var _createClass2 = __webpack_require__(2);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
-var _possibleConstructorReturn2 = __webpack_require__(5);
+var _possibleConstructorReturn2 = __webpack_require__(4);
 
 var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
 
-var _inherits2 = __webpack_require__(4);
+var _inherits2 = __webpack_require__(3);
 
 var _inherits3 = _interopRequireDefault(_inherits2);
 
 var _dec, _class;
 
-var _react = __webpack_require__(0);
+var _react = __webpack_require__(5);
 
 var _react2 = _interopRequireDefault(_react);
 
@@ -88,10 +101,16 @@ var Login = (_dec = (0, _reactRedux.connect)(function (state) {
     function Login(props) {
         (0, _classCallCheck3.default)(this, Login);
 
+        /**
+         * 通过js引入的图片webpack不会打包
+         * 通过require的东西会被打包到bundle
+         * 返回的是imgs/xxx.jpeg
+         * 即url-loader处理过的路径
+         */
         var _this = (0, _possibleConstructorReturn3.default)(this, (Login.__proto__ || (0, _getPrototypeOf2.default)(Login)).call(this, props));
 
         _this.state = {
-            data: ['43159800e84286929d5462183144176f.jpeg']
+            data: [__webpack_require__(31), __webpack_require__(30), __webpack_require__(32), __webpack_require__(33)]
         };
         return _this;
     }
@@ -191,8 +210,9 @@ var Login = (_dec = (0, _reactRedux.connect)(function (state) {
 exports.default = Login;
 
 /***/ }),
-
-/***/ 17:
+/* 15 */,
+/* 16 */,
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -263,8 +283,7 @@ var afterDeleteComment = exports.afterDeleteComment = function afterDeleteCommen
 };
 
 /***/ }),
-
-/***/ 18:
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -274,7 +293,7 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _react = __webpack_require__(0);
+var _react = __webpack_require__(5);
 
 var _react2 = _interopRequireDefault(_react);
 
@@ -328,8 +347,7 @@ exports.default = function (props) {
 };
 
 /***/ }),
-
-/***/ 19:
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -340,7 +358,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.signOut = exports.signIn = undefined;
 
-var _extends2 = __webpack_require__(33);
+var _extends2 = __webpack_require__(37);
 
 var _extends3 = _interopRequireDefault(_extends2);
 
@@ -422,8 +440,7 @@ var signOut = exports.signOut = function signOut(user) {
 };
 
 /***/ }),
-
-/***/ 20:
+/* 20 */
 /***/ (function(module, exports) {
 
 module.exports = {
@@ -460,8 +477,15 @@ module.exports = {
 };
 
 /***/ }),
-
-/***/ 29:
+/* 21 */,
+/* 22 */,
+/* 23 */,
+/* 24 */,
+/* 25 */,
+/* 26 */,
+/* 27 */,
+/* 28 */,
+/* 29 */
 /***/ (function(module, exports) {
 
 module.exports = {
@@ -471,6 +495,29 @@ module.exports = {
 	"login": "index_login"
 };
 
-/***/ })
+/***/ }),
+/* 30 */
+/***/ (function(module, exports, __webpack_require__) {
 
-};;
+module.exports = __webpack_require__.p + "imgs/1b47bb675b7deb8df6e3527363098882-be1aa.jpeg";
+
+/***/ }),
+/* 31 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "imgs/43159800e84286929d5462183144176f-a6f7f.jpeg";
+
+/***/ }),
+/* 32 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "imgs/acf4842e063a80de2a86c15f17b0430a-ed1b2.jpg";
+
+/***/ }),
+/* 33 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "imgs/ff08c0582da0431d70a99098a4132c38-5a365.jpeg";
+
+/***/ })
+];;

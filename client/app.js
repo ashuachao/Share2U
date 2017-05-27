@@ -1,10 +1,10 @@
 // _ 开头的私有方法。
 // 事件监听方法，handle*。
 // ssr客户端还是会进行开销较小的二次渲染的
-import 'rxjs'
+import 'rxjs';
 import React, {Component} from 'react';
 // log功能
-import logger from 'redux-logger'
+// import logger from 'redux-logger'
 // jsx -> js对象 -> Dom元素,把reactDOM单独出来是因为有可能吧js对象渲染为DOM/APP
 import ReactDOM from 'react-dom';
 import { createStore, applyMiddleware } from 'redux'
@@ -26,7 +26,10 @@ const epicMiddleware = createEpicMiddleware(rootEpics);
 const store = createStore(
     rootReducer, 
     // REDUX_STATE,
-    applyMiddleware(logger, epicMiddleware)
+    applyMiddleware(
+        // logger, 
+        epicMiddleware
+    )
 )
 ReactDOM.render(
     <Provider store={store}>
