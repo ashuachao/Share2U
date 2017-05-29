@@ -97,7 +97,7 @@
   },
   "scripts": {
     "clean:dev": "rimraf dist/dev/*",
-    "clean:prod": "rimraf assets/prod/*",
+    "clean:prod": "rimraf assets/*",
     "dev": "npm run clean:dev && webpack-dev-server --config ./build/webpack.dev.js --progress",
     "dev:server": "npm run clean:dev && nodemon ./server/server.dev.js localhost 8888 --exec babel-node",
     "prod": "npm run clean:prod && webpack --config ./build/webpack.prod.js --progress --colors",

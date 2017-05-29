@@ -20,7 +20,7 @@ import clientRoute from './middlewares/clientRoute';
 import app from './app';
 import router from './routes/index';
 // const compiler = webpack(config);
-app.use(staticServer(path.join(__dirname,'../assets/prod')));
+app.use(staticServer(path.join(__dirname,'../assets')));
 app.use(views(path.resolve(__dirname, '../assets/view'), {
     map: {
         html: 'ejs'
@@ -34,7 +34,7 @@ app.use(compress({
     threshold: 2048,
     flush: require('zlib').Z_SYNC_FLUSH
 }))
-// app.use(clientRoute)
+app.use(clientRoute)
 app.use(router.routes(), router.allowedMethods())
 // app.use(webpackDevMiddleware(compiler, {
 //     noInfo: true,

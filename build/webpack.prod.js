@@ -1,4 +1,7 @@
 // 生产的时候 前端和服务端的代码都需要打包
+// webpack-merge
+const merge = require('webpack-merge');
+const baseConfig = require('./webpack.base');
 const path = require('path');
 const webpack = require('webpack');
 // 自动补全css代码
@@ -19,179 +22,95 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const ProvidePlugin = webpack.ProvidePlugin;
 // 不打包node_module
 const nodeExternals = require('webpack-node-externals');
-const entry_browser = './client/app.js'
 const entry_server = './client/containers/App/App';
-const browserConfig = {
-    entry: {
-        app: entry_browser
-    },
-    output: {
-        path: path.resolve(__dirname, '../assets/prod'),
-        filename: '[name]-[hash].bundle.js',
-        //生产的html存放资源的路径
-        //publicPath:'/static/'
-        // 导出的chunk的名字,按需加载的导出文件名字
-        chunkFilename: '[name]-[hash].chunk.js',
-        // 读到了externals中的key时，需要以umd的方式去获取资源名
-        libraryTarget: 'umd'
-    },
-    // 使用外部扩展,webpack解析key的时候,默认使用外部的扩展
-    externals: {
-        'react': 'React',
-        'react-dom': 'ReactDOM',
-        'axios': 'axios',
-        'redux': 'Redux',
-        'react-router-dom': 'ReactRouterDOM'
-    },
-    resolve: {
-        // 引入模块的时候 import xxx 没有带后缀
-        // extension会进行后缀匹配 
-        extensions: ['.web.tsx', '.web.ts', '.web.jsx', '.web.js', '.ts', '.tsx', '.js', '.jsx', '.json'],
-        // 配置别名 
-        // 代替深层次的目录路径
-        alias: {
-            '@': path.resolve(__dirname, '../client'),
-            'containers': path.resolve(__dirname, '../client/containers'),
-            'components': path.resolve(__dirname, '../client/components'),
-            'reducers': path.resolve(__dirname, '../client/reducers'),
-            'images': path.resolve(__dirname, '../client/images'),
-            'util': path.resolve(__dirname, '../client/util'),
-            'routers': path.resolve(__dirname, '../client/routers')
-        },
-        // 模块重命名
-        modules: [
-            path.resolve(__dirname, '../client'),
-            path.resolve(__dirname, '../node_modules')
-        ]
-    },
+const browserConfig = merge(baseConfig, {
     module: {
-        rules: [{
-            test: /\.(js|jsx)$/,
-            // 不需要babel编译的范围
-            exclude: /node_modules/,
-            use: {
-                loader: 'babel-loader',
-                options: {
-                    presets: ['env', 'react'],
-                    plugins: ["transform-decorators-legacy", "syntax-dynamic-import"]
-                }
+        rules: [
+            {
+                // 对于私有css组件,使用css-module
+                test: /\.scss$/,
+                // 将css分离,不合并到js
+                use: ExtractTextPlugin.extract({
+                    fallback: "style-loader",
+                    // 开启css-module
+                    use: [
+                        {   loader: "css-loader",
+                            options: {
+                                modules: true,//是否支持css-module
+                                camelCase: true,//是否支持xxx-xxx
+                                importLoaders: 1,//是否支持css import
+                                localIdentName: '[name]_[local]'//css-module的命名方法
+                            }
+                        },
+                        {   loader: 'postcss-loader',
+                            options: {
+                                plugins: () => [
+                                    autoprefixer(), 
+                                    pxtorem({
+                                        rootValue: 100,
+                                        propWhiteList: []
+                                    }),
+                                    Easysprites({
+                                        imagePath: './client/images',
+                                        spritePath: './assets/prod/imgs_sprite'
+                                    })
+                                ]
+                            }
+                        },
+                        { loader: "sass-loader" }
+                    ],
+                }),
+                include: [path.resolve(__dirname, '../client/containers'), path.resolve(__dirname, '../client/components')]
+            }, 
+            {
+                // 对于公共css组件,不使用css-module
+                test: /\.scss$/,
+                // 将css分离,不合并到js
+                use: ExtractTextPlugin.extract({
+                    fallback: "style-loader",
+                    // 开启css-module
+                    use: [
+                        { loader: "css-loader" },
+                        {   loader: 'postcss-loader',
+                            options: {
+                                plugins: () => [
+                                    autoprefixer(), 
+                                    pxtorem({
+                                        rootValue: 100,
+                                        propWhiteList: []
+                                    }),
+                                    Easysprites({
+                                        imagePath: './client/images',
+                                        spritePath: './assets/prod/imgs_sprite'
+                                    })
+                                ]
+                            }
+                        },
+                        { loader: "sass-loader" }
+                    ],
+                }),
+                include: path.resolve(__dirname, '../client/style')
+            }, 
+            {
+                test: /\.css$/,
+                // 将css分离,不合并到js
+                use: ExtractTextPlugin.extract({
+                    fallback: "style-loader",
+                    use: [
+                        { loader: "css-loader" }
+                    ],
+                })
+            }, 
+            {
+                // 解决ejs模板解析不对的问题
+                test: /\.html$/,
+                use: { loader: 'html-loader?minimize=false' }
             }
-        }, {
-            // 对于私有css组件,使用css-module
-            test: /\.scss$/,
-            // 将css分离,不合并到js
-            use: ExtractTextPlugin.extract({
-                fallback: "style-loader",
-                // 开启css-module
-                use: [
-                    {
-                        // loader: "css-loader?module=true"
-                        loader: "css-loader",
-                        options: {
-                            modules: true,//是否支持css-module
-                            camelCase: true,//是否支持xxx-xxx
-                            importLoaders: 1,//是否支持css import
-                            localIdentName: '[name]_[local]'//css-module的命名方法
-                        }
-                    },
-                    {
-                        loader: 'postcss-loader',
-                        options: {
-                            plugins: () => [
-                                autoprefixer(), 
-                                pxtorem({
-                                    rootValue: 100,
-                                    propWhiteList: []
-                                }),
-                                Easysprites({
-                                    imagePath: './client/images',
-                                    spritePath: './assets/prod/imgs_sprite'
-                                })
-                            ]
-                        }
-                    },
-                    {
-                        loader: "sass-loader"
-                    }],
-            }),
-            include: [path.resolve(__dirname, '../client/containers'), path.resolve(__dirname, '../client/components')]
-        }, {
-            // 对于公共css组件,不使用css-module
-            test: /\.scss$/,
-            // 将css分离,不合并到js
-            use: ExtractTextPlugin.extract({
-                fallback: "style-loader",
-                // 开启css-module
-                use: [
-                    {
-                        loader: "css-loader"
-                    },
-                    {
-                        loader: 'postcss-loader',
-                        options: {
-                            plugins: () => [
-                                autoprefixer(), 
-                                pxtorem({
-                                    rootValue: 100,
-                                    propWhiteList: []
-                                }),
-                                Easysprites({
-                                    imagePath: './client/images',
-                                    spritePath: './assets/prod/imgs_sprite'
-                                })
-                            ]
-                        }
-                    },
-                    {
-                        loader: "sass-loader"
-                    }],
-            }),
-            include: path.resolve(__dirname, '../client/style')
-        }, {
-            // 对于公共css组件,不使用css-module
-            test: /\.css$/,
-            // 将css分离,不合并到js
-                // 开启css-module
-            use: ExtractTextPlugin.extract({
-                fallback: "style-loader",
-                // 开启css-module
-                use: [
-                    {
-                        loader: "css-loader"
-                    }
-                ],
-            })
-        }, {
-            test: /\.(ttf|eot|svg|woff|woff2)(\?.+)?$/,
-            loader: 'file-loader',
-            query: {
-                name: 'svg/[hash:12].[ext]'
-            }
-        }, {
-            // 图片大小小于20kb会返回dataURL
-            test: /\.(png|jpg|gif|svg|jpeg)$/i,
-            loader: 'url-loader',
-            query: {
-                limit: 2000,
-                name: 'imgs/[name]-[hash:5].[ext]'
-            }
-        }, {
-            // 解决ejs模板解析不对的问题
-            test: /\.html$/,
-            use: {
-                loader: 'html-loader?minimize=false'
-            }
-        }]
+        ]
     },
     plugins: [
         // 热加载替换,和入口entry的reload对应,都会被传入开发服务器
         new webpack.HotModuleReplacementPlugin(),
-        // 迁移1到2的插件,如之前的exports.postcss可以写在这里
-        new webpack.LoaderOptionsPlugin({
-            options: {
-                modulesDirectories: ['node_modules', path.join(__dirname, '../node_modules')],
-            }
-        }),
         // 自动化生成html插件
         new htmlWebpackPlugin({
             filename: 'index.html', //页面的生产名字
@@ -205,7 +124,7 @@ const browserConfig = {
         }),
         // 提取css代码  bug?生成路径变为css/style.css, 里面引用的图片路径不会响应地改变
         new ExtractTextPlugin({
-            filename: "style.[contenthash].css",
+            filename: "style.css?[contenthash]",
             disable: false,
             allChunks: true
         }),
@@ -222,7 +141,7 @@ const browserConfig = {
         new webpack.optimize.CommonsChunkPlugin({
             // 将name对应entry的name,chunk代表的模块和入口模块的公共模块会被抽离出来放到chunk.js
             name: 'chunk',
-            filename: 'chunk.js',
+            filename: 'chunk.js?[chunkhash]',
             // 自动分离chunk
             // 不需要再entry里面定义chunk入口了
             minChunks: ({ resource }) => (
@@ -232,6 +151,12 @@ const browserConfig = {
                 resource.indexOf('node_modules') >= 0 &&
                 resource.match(/\.js$/)
             )
+        }),
+        // extract webpack runtime and module manifest to its own file in order to
+        // prevent vendor hash from being updated whenever app bundle is updated
+        new webpack.optimize.CommonsChunkPlugin({
+            name: 'manifest',
+            chunks: ['chunk']
         }),
         // 将按需加载async的文件的公共的第三方引用库提取出来
         new webpack.optimize.CommonsChunkPlugin({
@@ -274,11 +199,11 @@ const browserConfig = {
             // minimize: true
         })
     ]
-}
-const serverConfig = {
+})
+const serverConfig = merge(baseConfig, {
     entry: entry_server,
     output: {
-        path: path.resolve(__dirname, '../assets/prod/server'),
+        path: path.resolve(__dirname, '../assets/server'),
         filename: 'bundle.js',
         chunkFilename: '[name].chunk.js',
         //设置导出类型，web端默认是var，node需要module.exports = xxx的形式  
@@ -289,90 +214,48 @@ const serverConfig = {
         __filename: true,
         __dirname: false
     },
-    resolve: {
-        alias: {
-            '@': path.resolve(__dirname, '../client'),
-            'containers': path.resolve(__dirname, '../client/containers'),
-            'components': path.resolve(__dirname, '../client/components'),
-            'reducers': path.resolve(__dirname, '../client/reducers'),
-            'images': path.resolve(__dirname, '../client/images'),
-            'util': path.resolve(__dirname, '../client/util'),
-            'routers': path.resolve(__dirname, '../client/routers')
-        }
-    },
     module: {
-        rules: [{
-            test: /\.(js|jsx)$/,
-            // 不需要babel编译的范围
-            exclude: /node_modules/,
-            use: {
-                loader: 'babel-loader',
-                options: {
-                    presets: ['env', 'react'],
-                    plugins: ["transform-decorators-legacy", "syntax-dynamic-import"]
-                }
-            }
-        }, 
-        {
-            // 对于私有css组件,使用css-module
-            test: /\.scss$/,
-            use: [
-                {
-                    // 只需要导出css-module的映射关系,不需嵌入css,解决node端不解析css的问题
-                    // loader: "css-loader/locals?module=true"
-                    loader: 'css-loader/locals',
-                    options: {
-                        modules: true,
-                        camelCase: true,
-                        importLoaders: 1,
-                        localIdentName: '[name]_[local]'
-                    }
-                },
-                {
-                    loader: "sass-loader"
-                }
-            ],
-            include: [path.resolve(__dirname, '../client/containers'), path.resolve(__dirname, '../client/components')]
-        }, {
-            // 对于公共css组件,不使用css-module
-            test: /\.css$/,
-            // 将css分离,不合并到js
-                // 开启css-module
-            use: ExtractTextPlugin.extract({
-                fallback: "style-loader",
-                // 开启css-module
+        rules: [
+            {
+                // 对于私有css组件,使用css-module
+                test: /\.scss$/,
                 use: [
                     {
-                        loader: "css-loader"
+                        // 只需要导出css-module的映射关系,不需嵌入css,解决node端不解析css的问题
+                        // loader: "css-loader/locals?module=true"
+                        loader: 'css-loader/locals',
+                        options: {
+                            modules: true,
+                            camelCase: true,
+                            importLoaders: 1,
+                            localIdentName: '[name]_[local]'
+                        }
+                    },
+                    {
+                        loader: "sass-loader"
                     }
                 ],
-            })
-        }, {
+                include: [path.resolve(__dirname, '../client/containers'), path.resolve(__dirname, '../client/components')]
+            }, 
+            {
+                // 对于公共css组件,不使用css-module
+                test: /\.css$/,
+                use: [
+                    { loader: "style-loader" },
+                    { loader: "css-loader/locals" }
+                ],
+            }, 
+            {
             // 对于公共css组件,不使用css-module
-            test: /\.scss$/,
-            use: [
-                {
-                    loader: "css-loader/locals"
-                },
-                {
-                    loader: "sass-loader"
-                }
-            ],
-            include: path.resolve(__dirname, '../client/style')
-        }, 
-        {
-            test: /\.(ttf|eot|svg|woff|woff2)(\?.+)?$/,
-            loader: 'file-loader?name=[hash:12].[ext]',
-        }, {
-            // 图片大小小于20kb会返回dataURL
-            test: /\.(png|jpg|gif|svg|jpeg)$/i,
-            loader: 'url-loader',
-            query: {
-                limit: 2000,
-                name: 'imgs/[name]-[hash:5].[ext]'
-            }
-        }]
+                test: /\.scss$/,
+                use: [
+                    { loader: "css-loader/locals" },
+                    { loader: "sass-loader" }
+                ],
+                include: path.resolve(__dirname, '../client/style')
+            }, 
+        ]
     },
     externals: [nodeExternals()]
-}
+})
 module.exports = [browserConfig, serverConfig]

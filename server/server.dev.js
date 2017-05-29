@@ -43,7 +43,7 @@ const CONFIG = {
 }
 app.use(session(CONFIG, app));
 // static assert
-app.use(staticServer(path.join(__dirname,'../assets/dev')));
+app.use(staticServer(path.join(__dirname,'../assets')));
 // views template
 app.use(views(path.resolve(__dirname, '../assets/view'), {
     map: {
