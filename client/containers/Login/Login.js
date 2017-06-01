@@ -34,10 +34,10 @@ export default class Login extends Component{
          */
         this.state={
             data: [
-                require('images/43159800e84286929d5462183144176f.jpeg'),
-                require('images/1b47bb675b7deb8df6e3527363098882.jpeg'),
-                require('images/acf4842e063a80de2a86c15f17b0430a.jpg'),
-                require('images/ff08c0582da0431d70a99098a4132c38.jpeg')
+                require('images/43159800e84286929d5462183144176f.webp'),
+                require('images/1b47bb675b7deb8df6e3527363098882.webp'),
+                require('images/acf4842e063a80de2a86c15f17b0430a.webp'),
+                require('images/ff08c0582da0431d70a99098a4132c38.webp')
             ]
         }
     }

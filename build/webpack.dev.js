@@ -14,6 +14,26 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 // 自动因入库,不用每次import
 const ProvidePlugin = webpack.ProvidePlugin;
 module.exports = merge(baseConfig, {
+    entry: {
+        app: [
+                'react-hot-loader/patch',
+                'webpack-hot-middleware/client?path=/__what&timeout=2000&overlay=false',
+                './client/app.js'
+            // 我们 app 的入口文件
+            ]
+    },
+    output: {
+        path: path.resolve(__dirname, '../assets/dev'),
+        // chunkhash是单个文件的hash,hash是整个编译过程的hash
+        // 用chunkhash可以增量更新
+        filename: '[name].bundle.js',
+        chunkFilename: '[name].chunk.js',
+        libraryTarget: 'umd',
+        publicPath: '/'
+        //生产的html存放资源的路径
+        // publicPath: path.resolve(__dirname, '../dist/dev/client'),
+        // 导出的chunk的名字,按需加载的导出文件名字
+    },
     module: {
         rules: [ 
             {
@@ -83,14 +103,6 @@ module.exports = merge(baseConfig, {
             }
         }]
     },
-    // webpack服务器
-    devServer: {
-        port: 8084,
-        inline: true,
-        hot: true,
-        // compress: true
-        contentBase: path.resolve(__dirname, '../assets/client')
-    },
     plugins: [
         new webpack.LoaderOptionsPlugin({
             options: {
@@ -119,7 +131,7 @@ module.exports = merge(baseConfig, {
         new webpack.optimize.CommonsChunkPlugin({
             // 将name对应entry的name,chunk代表的模块和入口模块的公共模块会被抽离出来放到chunk.js
             name: 'chunk',
-            filename: 'chunk.js?[chunkhash]',
+            filename: 'chunk.js',
             // 自动分离chunk
             // 不需要再entry里面定义chunk入口了
             minChunks: ({ resource }) => {
@@ -129,10 +141,6 @@ module.exports = merge(baseConfig, {
                 resource.indexOf('node_modules') >= 0 &&
                 resource.match(/\.js$/)
             },
-        }),
-        new webpack.optimize.CommonsChunkPlugin({
-            name: 'manifest',
-            chunks: ['chunk']
         }),
         // 将按需加载async的文件的公共的第三方引用库提取出来
         new webpack.optimize.CommonsChunkPlugin({

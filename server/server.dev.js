@@ -43,9 +43,9 @@ const CONFIG = {
 }
 app.use(session(CONFIG, app));
 // static assert
-app.use(staticServer(path.join(__dirname,'../assets')));
+app.use(staticServer(path.join(__dirname,'../assets/dev')));
 // views template
-app.use(views(path.resolve(__dirname, '../assets/view'), {
+app.use(views(path.resolve(__dirname, '../assets/dev/view'), {
     map: {
         html: 'ejs'
     }
@@ -72,9 +72,10 @@ app.use(convert(webpackDevMiddleware(compiler, {
         colors: true // 用颜色标识
     },
 })));
-app.use(convert(webpackHotMiddleware(compiler), {
-    log: () => {}
-}));
+app.use(convert(webpackHotMiddleware(compiler, {
+    log: false,
+    path: '/__what'
+})));
 // listen
 app.listen(8888, () => {
     const port = 8888;

@@ -1,5 +1,16 @@
 {
-  "plugins": [["import", {  "style": "css", "libraryName": "antd-mobile" }], "transform-runtime", "transform-decorators", "transform-decorators-legacy", "syntax-dynamic-import"],
+  "plugins": [
+      "react-hot-loader/babel",
+      ["import", {  "style": "css", "libraryName": "antd-mobile" }],
+      "transform-runtime",  
+      "transform-decorators-legacy", 
+      "syntax-dynamic-import"
+  ],
 //  在node中支持react的写法
-  "presets": ["es2015", "stage-0", "react"]
+  "presets": [
+      "env",
+      "es2015", 
+      "stage-0", 
+      "react"
+    ]
 }

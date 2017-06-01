@@ -53,11 +53,7 @@ module.exports = {
                 // 不需要babel编译的范围
                 exclude: /node_modules/,
                 use: {
-                    loader: 'babel-loader',
-                    options: {
-                        presets: ['env', 'react'],
-                        plugins: ["transform-decorators-legacy", "syntax-dynamic-import"]
-                    }
+                    loader: 'babel-loader'
                 }
             }, 
             {
@@ -70,7 +66,7 @@ module.exports = {
             }, 
             {
                 // 图片大小小于20kb会返回dataURL
-                test: /\.(png|jpg|gif|svg|jpeg)$/i,
+                test: /\.(png|jpg|gif|svg|jpeg|webp)$/i,
                 loader: 'url-loader',
                 query: {
                     limit: 10000,

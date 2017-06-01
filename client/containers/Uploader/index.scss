@@ -1,0 +1,26 @@
+.uploader{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+.file_wrapper{
+    position: relative;
+    padding: 10px;
+    width: 300px;
+    height: 300px;
+    cursor: pointer;
+    color: #888;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    line-height: 300px;
+    text-align: center;
+}
+.file_input{
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}

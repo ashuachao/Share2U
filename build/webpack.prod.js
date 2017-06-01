@@ -17,7 +17,11 @@ const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 // css精灵图
 const Easysprites = require('postcss-easysprites');
 // 自动压缩代码插件
+const os = require('os');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const ParallelUglifyPlugin = require('webpack-parallel-uglify-plugin');
+// 开启gzip
+const CompressionPlugin = require("compression-webpack-plugin");
 // 自动因入库,不用每次import
 const ProvidePlugin = webpack.ProvidePlugin;
 // 不打包node_module
@@ -52,7 +56,7 @@ const browserConfig = merge(baseConfig, {
                                     }),
                                     Easysprites({
                                         imagePath: './client/images',
-                                        spritePath: './assets/prod/imgs_sprite'
+                                        spritePath: './assets/imgs_sprite'
                                     })
                                 ]
                             }

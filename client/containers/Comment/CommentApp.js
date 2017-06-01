@@ -101,6 +101,8 @@ export default class CommentApp extends Component {
                                 onClick={this.handleSignOut.bind(this)}>
                                 SIGNOUT
                             </Button>
+                            <Link to='/Uploader'>上传文件</Link>
+                            <Link to='/uass'>NOMATCH</Link>
                         </div>
                     </div>
                 </div>
