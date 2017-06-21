@@ -4,6 +4,8 @@ const merge = require('webpack-merge');
 const baseConfig = require('./webpack.base');
 const path = require('path');
 const webpack = require('webpack');
+const HelloCompilationPlugiin = require('./helloWorldPlugin');
+
 // 自动补全css代码
 const autoprefixer = require('autoprefixer');
 // 自动生成html
@@ -19,7 +21,6 @@ const Easysprites = require('postcss-easysprites');
 // 自动压缩代码插件
 const os = require('os');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-const ParallelUglifyPlugin = require('webpack-parallel-uglify-plugin');
 // 开启gzip
 const CompressionPlugin = require("compression-webpack-plugin");
 // 自动因入库,不用每次import
@@ -113,6 +114,7 @@ const browserConfig = merge(baseConfig, {
         ]
     },
     plugins: [
+        new HelloCompilationPlugiin(),
         // 热加载替换,和入口entry的reload对应,都会被传入开发服务器
         new webpack.HotModuleReplacementPlugin(),
         // 自动化生成html插件

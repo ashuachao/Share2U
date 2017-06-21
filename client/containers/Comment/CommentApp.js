@@ -12,7 +12,6 @@ import Loading from 'components/Loading/Loading';
 // import Login from 'containers/Login/Login';
 import { signIn, signOut } from 'reducers/login';
 import style from './index.scss';
-import axios from 'axios';
 // bring history
 @withRouter
 @connect(
